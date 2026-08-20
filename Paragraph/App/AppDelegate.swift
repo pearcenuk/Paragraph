@@ -153,7 +153,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         SettingsWindowController.shared.showWindow(nil)
     }
 
-    // MARK: - Menu state
+}
+
+// MARK: - Menu state
+
+/// The conformance matters: without it Swift never exposes `validateMenuItem(_:)`
+/// to Objective-C, AppKit never calls it, and every checked menu item silently
+/// loses its tick.
+extension AppDelegate: NSMenuItemValidation {
 
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         switch menuItem.action {

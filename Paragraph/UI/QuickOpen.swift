@@ -167,14 +167,14 @@ private struct QuickOpenRow: View {
 
 /// A floating panel, dismissed with Escape, that never becomes a window the
 /// writer has to manage.
-final class QuickOpenPanelController {
+final class QuickOpenPanelController: NSObject {
     static let shared = QuickOpenPanelController()
 
     private var panel: NSPanel?
     private var keyMonitor: Any?
     private let model = QuickOpenModel()
 
-    private init() {}
+    private override init() { super.init() }
 
     func show(relativeTo parent: NSWindow?) {
         model.reload(from: WorkspaceController.shared.workspace)
@@ -211,8 +211,11 @@ final class QuickOpenPanelController {
         panel.titlebarAppearsTransparent = true
         panel.isMovableByWindowBackground = true
         panel.level = .floating
-        panel.hidesOnDeactivate = true
         panel.isReleasedWhenClosed = false
+        panel.delegate = self
+        // Not `hidesOnDeactivate`: that only hides the panel and brings it back
+        // when the writer returns to Paragraph, which is not what dismissing
+        // something means. Losing focus dismisses it outright instead.
         panel.contentView = hosting
         panel.appearance = Preferences.shared.currentTheme.appearance
         return panel
@@ -257,10 +260,22 @@ final class QuickOpenPanelController {
     }
 
     private func open(_ item: WorkspaceItem, inNewWindow: Bool) {
+        // Capture the destination window *before* dismissing the panel, or
+        // `NSApp.mainWindow` may momentarily be nothing at all.
+        let destination = NSApp.mainWindow ?? NSApp.windows.first {
+            $0.windowController is DocumentWindowController && $0.isVisible
+        }
         close()
         DocumentOpener.open(
             url: item.url,
-            placement: inNewWindow ? .newWindow : .tab(in: NSApp.mainWindow)
+            placement: inNewWindow ? .newWindow : .tab(in: destination)
         )
+    }
+}
+
+extension QuickOpenPanelController: NSWindowDelegate {
+    /// Clicking away dismisses Quick Open, the same as pressing Escape.
+    func windowDidResignKey(_ notification: Notification) {
+        close()
     }
 }

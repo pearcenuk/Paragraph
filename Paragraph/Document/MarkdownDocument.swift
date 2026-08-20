@@ -61,8 +61,8 @@ final class MarkdownDocument: NSDocument, ObservableObject {
 
     override class var preservesVersions: Bool { true }
 
-    /// Paragraph restores its own session deliberately, so AppKit's parallel
-    /// window restoration is switched off to keep the two from fighting.
+    /// A new document is autosaved as a draft, so work done before the writer
+    /// has chosen a filename is not lost either.
     override class var autosavesDrafts: Bool { true }
 
     // MARK: - Reading and writing

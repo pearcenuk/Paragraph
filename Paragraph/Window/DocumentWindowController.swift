@@ -12,6 +12,7 @@ import Combine
 final class DocumentWindowController: NSWindowController {
 
     private static let tabbingIdentifier = NSWindow.TabbingIdentifier("ParagraphDocument")
+    static let defaultContentSize = NSSize(width: 1000, height: 720)
 
     let markdownDocument: MarkdownDocument
     let browserViewController: WorkspaceBrowserViewController
@@ -67,7 +68,15 @@ final class DocumentWindowController: NSWindowController {
         splitViewController.splitView.autosaveName = "ParagraphSidebar"
 
         window?.contentViewController = splitViewController
+        // Assigning `contentViewController` resizes the window to the view
+        // controller's fitting size, which for a split view is barely more than
+        // its minimum thicknesses. Restore a size worth writing in.
+        window?.setContentSize(Self.defaultContentSize)
         window?.toolbar = makeToolbar()
+
+        // The browser is the point of having a workspace, so it starts open when
+        // there is one. Session restoration overrides this per window.
+        sidebarItem.isCollapsed = WorkspaceController.shared.workspace == nil
 
         WorkspaceController.shared.$workspace
             .receive(on: RunLoop.main)

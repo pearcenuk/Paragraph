@@ -107,7 +107,9 @@ private struct IssueRow: View {
         }
         .padding(.vertical, 3)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(issue.severityLabel). \(issue.message). \(L10n.lineLabel(issue.line))")
+        // The message already ends in a full stop; adding another produces
+        // "never closed.. Line 5" when VoiceOver reads it.
+        .accessibilityLabel("\(issue.severityLabel). \(issue.message) \(L10n.lineLabel(issue.line))")
     }
 }
 
