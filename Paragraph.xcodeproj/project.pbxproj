@@ -1,0 +1,419 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		PA000000000000000000000D /* ParagraphKit in Frameworks */ = {isa = PBXBuildFile; productRef = PA000000000000000000000C /* ParagraphKit */; };
+		PA0000000000000000000022 /* ParagraphKit in Frameworks */ = {isa = PBXBuildFile; productRef = PA0000000000000000000021 /* ParagraphKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		PA0000000000000000000020 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = PA0000000000000000000006 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = PA0000000000000000000005;
+			remoteInfo = Paragraph;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		PA000000000000000000000A /* Paragraph.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paragraph.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		PA0000000000000000000018 /* ParagraphTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ParagraphTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		PA0000000000000000000014 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		PA0000000000000000000015 /* Paragraph.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Paragraph.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		PA0000000000000000000001 /* Paragraph */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Paragraph;
+			sourceTree = "<group>";
+		};
+		PA0000000000000000000016 /* ParagraphTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ParagraphTests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		PA0000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				PA000000000000000000000D /* ParagraphKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		PA000000000000000000001A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				PA0000000000000000000022 /* ParagraphKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		PA0000000000000000000007 = {
+			isa = PBXGroup;
+			children = (
+				PA0000000000000000000001 /* Paragraph */,
+				PA0000000000000000000016 /* ParagraphTests */,
+				PA0000000000000000000009 /* Config */,
+				PA0000000000000000000008 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		PA0000000000000000000009 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				PA0000000000000000000014 /* Info.plist */,
+				PA0000000000000000000015 /* Paragraph.entitlements */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		PA0000000000000000000008 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				PA000000000000000000000A /* Paragraph.app */,
+				PA0000000000000000000018 /* ParagraphTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		PA0000000000000000000005 /* Paragraph */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = PA000000000000000000000F /* Build configuration list for PBXNativeTarget "Paragraph" */;
+			buildPhases = (
+				PA0000000000000000000003 /* Sources */,
+				PA0000000000000000000002 /* Frameworks */,
+				PA0000000000000000000004 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				PA0000000000000000000001 /* Paragraph */,
+			);
+			name = Paragraph;
+			packageProductDependencies = (
+				PA000000000000000000000C /* ParagraphKit */,
+			);
+			productName = Paragraph;
+			productReference = PA000000000000000000000A /* Paragraph.app */;
+			productType = "com.apple.product-type.application";
+		};
+		PA0000000000000000000017 /* ParagraphTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = PA000000000000000000001C /* Build configuration list for PBXNativeTarget "ParagraphTests" */;
+			buildPhases = (
+				PA0000000000000000000019 /* Sources */,
+				PA000000000000000000001A /* Frameworks */,
+				PA000000000000000000001B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				PA000000000000000000001F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				PA0000000000000000000016 /* ParagraphTests */,
+			);
+			name = ParagraphTests;
+			packageProductDependencies = (
+				PA0000000000000000000021 /* ParagraphKit */,
+			);
+			productName = ParagraphTests;
+			productReference = PA0000000000000000000018 /* ParagraphTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		PA0000000000000000000006 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					PA0000000000000000000005 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+					PA0000000000000000000017 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = PA0000000000000000000005;
+					};
+				};
+			};
+			buildConfigurationList = PA000000000000000000000E /* Build configuration list for PBXProject "Paragraph" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = PA0000000000000000000007;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				PA000000000000000000000B /* XCLocalSwiftPackageReference "ParagraphKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = PA0000000000000000000008 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				PA0000000000000000000005 /* Paragraph */,
+				PA0000000000000000000017 /* ParagraphTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		PA0000000000000000000004 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		PA000000000000000000001B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		PA0000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		PA0000000000000000000019 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		PA000000000000000000001F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = PA0000000000000000000005 /* Paragraph */;
+			targetProxy = PA0000000000000000000020 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		PA0000000000000000000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		PA0000000000000000000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				SDKROOT = macosx;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				ARCHS = "arm64 x86_64";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		PA0000000000000000000012 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/Paragraph.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.paragraph;
+				PRODUCT_NAME = Paragraph;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		PA0000000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Config/Paragraph.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = Config/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.paragraph;
+				PRODUCT_NAME = Paragraph;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		PA000000000000000000001D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.paragraph.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Paragraph.app/Contents/MacOS/Paragraph";
+			};
+			name = Debug;
+		};
+		PA000000000000000000001E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "-";
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.paragraph.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Paragraph.app/Contents/MacOS/Paragraph";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		PA000000000000000000000E /* Build configuration list for PBXProject "Paragraph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				PA0000000000000000000010 /* Debug */,
+				PA0000000000000000000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		PA000000000000000000000F /* Build configuration list for PBXNativeTarget "Paragraph" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				PA0000000000000000000012 /* Debug */,
+				PA0000000000000000000013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		PA000000000000000000001C /* Build configuration list for PBXNativeTarget "ParagraphTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				PA000000000000000000001D /* Debug */,
+				PA000000000000000000001E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		PA000000000000000000000B /* XCLocalSwiftPackageReference "ParagraphKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ParagraphKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		PA000000000000000000000C /* ParagraphKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ParagraphKit;
+		};
+		PA0000000000000000000021 /* ParagraphKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ParagraphKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = PA0000000000000000000006 /* Project object */;
+}

@@ -1,0 +1,1406 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%@, %@": {
+      "comment": "Joins the Writing Check error and warning counts.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, %@"
+          }
+        }
+      }
+    },
+    "%lld errors": {
+      "comment": "Writing Check error count. Uses plural rules.",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld error"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld errors"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld warnings": {
+      "comment": "Writing Check warning count. Uses plural rules.",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld warning"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld warnings"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld words": {
+      "comment": "Word count shown at the bottom of the editor. Uses plural rules.",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld word"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld words"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "About %@": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About %@"
+          }
+        }
+      }
+    },
+    "Bring All to Front": {
+      "comment": "Window menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bring All to Front"
+          }
+        }
+      }
+    },
+    "Cancel": {
+      "comment": "Generic cancel button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Check Document Now": {
+      "comment": "Spelling submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Document Now"
+          }
+        }
+      }
+    },
+    "Check Spelling While Typing": {
+      "comment": "Spelling submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check Spelling While Typing"
+          }
+        }
+      }
+    },
+    "Check spelling while typing": {
+      "comment": "Settings checkbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Check spelling while typing"
+          }
+        }
+      }
+    },
+    "Choose Folder…": {
+      "comment": "Button in the workspace browser empty state",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Folder…"
+          }
+        }
+      }
+    },
+    "Choose Workspace": {
+      "comment": "Confirm button in the folder chooser",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Workspace"
+          }
+        }
+      }
+    },
+    "Choose a folder to browse in Paragraph.": {
+      "comment": "Message in the folder chooser",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a folder to browse in Paragraph."
+          }
+        }
+      }
+    },
+    "Choose a folder to browse its Markdown files without leaving Paragraph.": {
+      "comment": "Empty state explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a folder to browse its Markdown files without leaving Paragraph."
+          }
+        }
+      }
+    },
+    "Clear Menu": {
+      "comment": "Clears the Open Recent list",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear Menu"
+          }
+        }
+      }
+    },
+    "Close": {
+      "comment": "Generic close button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Close"
+          }
+        }
+      }
+    },
+    "Closing %@ has no opening mark.": {
+      "comment": "Writing Check result for a bracket",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing %@ has no opening mark."
+          }
+        }
+      }
+    },
+    "Closing quotation mark %@ has no opening mark.": {
+      "comment": "Writing Check result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Closing quotation mark %@ has no opening mark."
+          }
+        }
+      }
+    },
+    "Copy": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy"
+          }
+        }
+      }
+    },
+    "Cut": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cut"
+          }
+        }
+      }
+    },
+    "Dark": {
+      "comment": "Theme name",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
+          }
+        }
+      }
+    },
+    "Done": {
+      "comment": "Generic done button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
+    "Downloading from iCloud": {
+      "comment": "Accessibility description for an item being fetched",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading from iCloud"
+          }
+        }
+      }
+    },
+    "Downloading from iCloud…": {
+      "comment": "Editor banner while a file is fetched",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading from iCloud…"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit"
+          }
+        }
+      }
+    },
+    "Enter Full Screen": {
+      "comment": "View menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter Full Screen"
+          }
+        }
+      }
+    },
+    "Error": {
+      "comment": "Writing Check severity",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
+          }
+        }
+      }
+    },
+    "Every command is also available from the menus.": {
+      "comment": "Introductory line in the shortcuts window",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every command is also available from the menus."
+          }
+        }
+      }
+    },
+    "File": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File"
+          }
+        }
+      }
+    },
+    "Find": {
+      "comment": "Edit menu submenu title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find"
+          }
+        }
+      }
+    },
+    "Find Next": {
+      "comment": "Find submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find Next"
+          }
+        }
+      }
+    },
+    "Find Previous": {
+      "comment": "Find submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find Previous"
+          }
+        }
+      }
+    },
+    "Find and Replace…": {
+      "comment": "Find submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find and Replace…"
+          }
+        }
+      }
+    },
+    "Find…": {
+      "comment": "Find submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Find…"
+          }
+        }
+      }
+    },
+    "Focus Mode": {
+      "comment": "Writing menu; a checked item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus Mode"
+          }
+        }
+      }
+    },
+    "Green Screen": {
+      "comment": "Theme name",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green Screen"
+          }
+        }
+      }
+    },
+    "Help": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Help"
+          }
+        }
+      }
+    },
+    "Hide %@": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide %@"
+          }
+        }
+      }
+    },
+    "Hide Others": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hide Others"
+          }
+        }
+      }
+    },
+    "It may have been moved, renamed or deleted since you last used Paragraph.": {
+      "comment": "Alert detail",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "It may have been moved, renamed or deleted since you last used Paragraph."
+          }
+        }
+      }
+    },
+    "Keep My Version": {
+      "comment": "Banner button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep My Version"
+          }
+        }
+      }
+    },
+    "Keyboard Shortcuts": {
+      "comment": "Window title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keyboard Shortcuts"
+          }
+        }
+      }
+    },
+    "Light": {
+      "comment": "Theme name",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        }
+      }
+    },
+    "Line %lld": {
+      "comment": "Location of a Writing Check result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Line %lld"
+          }
+        }
+      }
+    },
+    "Locate…": {
+      "comment": "Alert button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Locate…"
+          }
+        }
+      }
+    },
+    "Minimise": {
+      "comment": "Window menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Minimise"
+          }
+        }
+      }
+    },
+    "Move Focus to Editor": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Focus to Editor"
+          }
+        }
+      }
+    },
+    "Move Focus to Workspace Browser": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move Focus to Workspace Browser"
+          }
+        }
+      }
+    },
+    "Move to Trash": {
+      "comment": "Confirmation button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move to Trash"
+          }
+        }
+      }
+    },
+    "Move “%@” to the Trash?": {
+      "comment": "Confirmation alert",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move “%@” to the Trash?"
+          }
+        }
+      }
+    },
+    "Navigate": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Navigate"
+          }
+        }
+      }
+    },
+    "New": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New"
+          }
+        }
+      }
+    },
+    "No matching files": {
+      "comment": "Quick Open empty result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No matching files"
+          }
+        }
+      }
+    },
+    "No workspace folder is open.": {
+      "comment": "Empty state in the workspace browser",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No workspace folder is open."
+          }
+        }
+      }
+    },
+    "Not downloaded from iCloud": {
+      "comment": "Accessibility description for an item still in the cloud",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not downloaded from iCloud"
+          }
+        }
+      }
+    },
+    "Nothing to report.": {
+      "comment": "Writing Check found no issues",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to report."
+          }
+        }
+      }
+    },
+    "OK": {
+      "comment": "Generic confirm button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Open Quickly": {
+      "comment": "Placeholder in the Quick Open field",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Quickly"
+          }
+        }
+      }
+    },
+    "Open Recent": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Recent"
+          }
+        }
+      }
+    },
+    "Open Workspace Folder…": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Workspace Folder…"
+          }
+        }
+      }
+    },
+    "Open a document to run Writing Check.": {
+      "comment": "Writing Check with no document",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a document to run Writing Check."
+          }
+        }
+      }
+    },
+    "Open in New Window": {
+      "comment": "Navigate menu and browser context menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in New Window"
+          }
+        }
+      }
+    },
+    "Open in Tab": {
+      "comment": "Navigate menu and browser context menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open in Tab"
+          }
+        }
+      }
+    },
+    "Opening %@ is never closed.": {
+      "comment": "Writing Check result for a bracket",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening %@ is never closed."
+          }
+        }
+      }
+    },
+    "Opening quotation mark %@ is never closed.": {
+      "comment": "Writing Check result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opening quotation mark %@ is never closed."
+          }
+        }
+      }
+    },
+    "Open…": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open…"
+          }
+        }
+      }
+    },
+    "Paragraph": {
+      "comment": "The name of the application. Usually left untranslated.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paragraph"
+          }
+        }
+      }
+    },
+    "Paragraph is a native macOS Markdown writing application focused on readability and distraction-free drafting.": {
+      "comment": "One-line description of the application, shown in the About panel.",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paragraph is a native macOS Markdown writing application focused on readability and distraction-free drafting."
+          }
+        }
+      }
+    },
+    "Paste": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste"
+          }
+        }
+      }
+    },
+    "Print…": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Print…"
+          }
+        }
+      }
+    },
+    "Quick Open…": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick Open…"
+          }
+        }
+      }
+    },
+    "Quit %@": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit %@"
+          }
+        }
+      }
+    },
+    "Redo": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redo"
+          }
+        }
+      }
+    },
+    "Reload from Disk": {
+      "comment": "Banner button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reload from Disk"
+          }
+        }
+      }
+    },
+    "Remove from Session": {
+      "comment": "Alert button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from Session"
+          }
+        }
+      }
+    },
+    "Rename": {
+      "comment": "Rename sheet confirm button",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
+          }
+        }
+      }
+    },
+    "Rename…": {
+      "comment": "Workspace browser context menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename…"
+          }
+        }
+      }
+    },
+    "Reopen Closed Tab": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reopen Closed Tab"
+          }
+        }
+      }
+    },
+    "Reopens your workspace, windows and tabs, and returns you to roughly where you left off.": {
+      "comment": "Settings explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reopens your workspace, windows and tabs, and returns you to roughly where you left off."
+          }
+        }
+      }
+    },
+    "Restore the previous session at launch": {
+      "comment": "Settings checkbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore the previous session at launch"
+          }
+        }
+      }
+    },
+    "Return opens in a tab. Shift-Return opens in a new window.": {
+      "comment": "Quick Open footer hint",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Return opens in a tab. Shift-Return opens in a new window."
+          }
+        }
+      }
+    },
+    "Reveal in Finder": {
+      "comment": "Workspace browser context menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reveal in Finder"
+          }
+        }
+      }
+    },
+    "Revert to Saved": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Revert to Saved"
+          }
+        }
+      }
+    },
+    "Run Writing Check": {
+      "comment": "Writing menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Run Writing Check"
+          }
+        }
+      }
+    },
+    "Save": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save"
+          }
+        }
+      }
+    },
+    "Save As…": {
+      "comment": "File menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save As…"
+          }
+        }
+      }
+    },
+    "Select All": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select All"
+          }
+        }
+      }
+    },
+    "Services": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services"
+          }
+        }
+      }
+    },
+    "Settings": {
+      "comment": "Settings window title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Settings…"
+          }
+        }
+      }
+    },
+    "Show All": {
+      "comment": "Application menu item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show All"
+          }
+        }
+      }
+    },
+    "Show Next Tab": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Next Tab"
+          }
+        }
+      }
+    },
+    "Show Previous Tab": {
+      "comment": "Navigate menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Previous Tab"
+          }
+        }
+      }
+    },
+    "Show Spelling and Grammar": {
+      "comment": "Spelling submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Spelling and Grammar"
+          }
+        }
+      }
+    },
+    "Show Writing Check Results": {
+      "comment": "Writing menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Writing Check Results"
+          }
+        }
+      }
+    },
+    "Smart Dashes": {
+      "comment": "Substitutions submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart Dashes"
+          }
+        }
+      }
+    },
+    "Smart Quotes": {
+      "comment": "Substitutions submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smart Quotes"
+          }
+        }
+      }
+    },
+    "Spelling and Grammar": {
+      "comment": "Edit menu submenu title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spelling and Grammar"
+          }
+        }
+      }
+    },
+    "Substitutions": {
+      "comment": "Edit menu submenu title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Substitutions"
+          }
+        }
+      }
+    },
+    "Theme": {
+      "comment": "View menu submenu title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme"
+          }
+        }
+      }
+    },
+    "Theme:": {
+      "comment": "Settings label",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme:"
+          }
+        }
+      }
+    },
+    "This file was changed by another application.": {
+      "comment": "Banner shown when a file changes on disk",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file was changed by another application."
+          }
+        }
+      }
+    },
+    "This folder contains no Markdown or text files.": {
+      "comment": "Empty state when a workspace has no supported files",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This folder contains no Markdown or text files."
+          }
+        }
+      }
+    },
+    "This folder is not available at the moment.": {
+      "comment": "Shown when a workspace folder cannot be reached",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This folder is not available at the moment."
+          }
+        }
+      }
+    },
+    "Typewriter Mode": {
+      "comment": "Writing menu; a checked item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Typewriter Mode"
+          }
+        }
+      }
+    },
+    "Undo": {
+      "comment": "Edit menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Undo"
+          }
+        }
+      }
+    },
+    "Untitled": {
+      "comment": "Name for a document that has never been saved",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Untitled"
+          }
+        }
+      }
+    },
+    "Use Selection for Find": {
+      "comment": "Find submenu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Selection for Find"
+          }
+        }
+      }
+    },
+    "Uses the spelling languages configured in macOS System Settings.": {
+      "comment": "Settings explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uses the spelling languages configured in macOS System Settings."
+          }
+        }
+      }
+    },
+    "View": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View"
+          }
+        }
+      }
+    },
+    "Warning": {
+      "comment": "Writing Check severity",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning"
+          }
+        }
+      }
+    },
+    "Window": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Window"
+          }
+        }
+      }
+    },
+    "Word Count": {
+      "comment": "View menu; a checked item",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Word Count"
+          }
+        }
+      }
+    },
+    "Workspace Browser": {
+      "comment": "Accessibility label for the file list",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Workspace Browser"
+          }
+        }
+      }
+    },
+    "Writing": {
+      "comment": "Menu bar title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writing"
+          }
+        }
+      }
+    },
+    "Writing Check": {
+      "comment": "Window title",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writing Check"
+          }
+        }
+      }
+    },
+    "Writing Check looks for mechanical slips only. It does not judge your writing.": {
+      "comment": "Explanation shown alongside a clean result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Writing Check looks for mechanical slips only. It does not judge your writing."
+          }
+        }
+      }
+    },
+    "You can put it back from the Trash.": {
+      "comment": "Confirmation alert detail",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can put it back from the Trash."
+          }
+        }
+      }
+    },
+    "Your unsaved edits are still here. Saving will replace the version on disk.": {
+      "comment": "Banner detail",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your unsaved edits are still here. Saving will replace the version on disk."
+          }
+        }
+      }
+    },
+    "Zoom": {
+      "comment": "Window menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoom"
+          }
+        }
+      }
+    },
+    "“%@” appears twice in a row.": {
+      "comment": "Writing Check result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” appears twice in a row."
+          }
+        }
+      }
+    },
+    "“%@” could not be opened.": {
+      "comment": "Alert title when a restored file is gone",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” could not be opened."
+          }
+        }
+      }
+    },
+    "“%@” was used again close by.": {
+      "comment": "Writing Check result",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” was used again close by."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}
