@@ -63,4 +63,9 @@ otool -l "$VERIFY/Paragraph.app/Contents/MacOS/Paragraph" | grep -m1 minos | sed
 /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$VERIFY/Paragraph.app/Contents/Info.plist" | sed 's/^/  version: /'
 rm -rf "$VERIFY"
 
+echo "▸ Installing to /Applications"
+# The copy in /Applications is kept current with every build, so what is being
+# used is never a version behind what was just changed.
+Tools/install.sh --no-build
+
 echo "▸ Done: $ZIP ($(du -h "$ZIP" | cut -f1))"
