@@ -197,10 +197,6 @@ xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Release
 
 The app is signed to run locally ("ad-hoc"), so it builds without a developer account.
 
-`Tools/install.sh` builds a universal Release binary and replaces the copy in
-`/Applications`. `Tools/release.sh <version>` does that as well as setting the
-version, running every test and packaging the archive that goes on a release.
-
 ### Testing
 
 Pure logic — word counting, Writing Check, Markdown styling and file encoding — lives in a local Swift package with no dependency on the application, so it tests in under a second:

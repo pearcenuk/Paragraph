@@ -26,3 +26,6 @@ Package.resolved
 
 # Local configuration
 *.local.xcconfig
+
+# Personal build and release scripts — workflow, not part of the project
+Tools/
