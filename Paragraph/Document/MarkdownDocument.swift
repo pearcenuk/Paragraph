@@ -47,9 +47,11 @@ final class MarkdownDocument: NSDocument, ObservableObject {
         hasUndoManager = true
         textStorage.delegate = self
         themeObserver = Preferences.shared.$theme
+            .map { _ in () }
+            .merge(with: Preferences.shared.$editorFontSize.map { _ in () })
             .receive(on: RunLoop.main)
-            .sink { [weak self] identifier in
-                self?.applyDisplayAttributes(theme: identifier.theme)
+            .sink { [weak self] in
+                self?.applyDisplayAttributes(theme: Preferences.shared.currentTheme)
             }
     }
 

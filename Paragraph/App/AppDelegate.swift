@@ -21,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Lifecycle
 
     func applicationWillFinishLaunching(_ notification: Notification) {
+        BundledFonts.register()
         documentController = ParagraphDocumentController()
         NSWindow.allowsAutomaticWindowTabbing = true
         MenuBuilder.install()
@@ -165,6 +166,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Preferences.shared.wordCountVisible.toggle()
     }
 
+    @IBAction func increaseFontSize(_ sender: Any?) {
+        Preferences.shared.editorFontSize += EditorTypography.pointSizeStep
+    }
+
+    @IBAction func decreaseFontSize(_ sender: Any?) {
+        Preferences.shared.editorFontSize -= EditorTypography.pointSizeStep
+    }
+
+    @IBAction func actualFontSize(_ sender: Any?) {
+        Preferences.shared.editorFontSize = EditorTypography.defaultPointSize
+    }
+
     @IBAction func selectTheme(_ sender: Any?) {
         guard let command = (sender as? NSMenuItem)?.representedObject as? AppCommand,
               let identifier = command.themeIdentifier
@@ -236,6 +249,15 @@ extension AppDelegate: NSMenuItemValidation {
             let command = menuItem.representedObject as? AppCommand
             menuItem.state = command?.themeIdentifier == Preferences.shared.theme ? .on : .off
             return true
+
+        case #selector(increaseFontSize(_:)):
+            return Preferences.shared.canIncreaseFontSize
+
+        case #selector(decreaseFontSize(_:)):
+            return Preferences.shared.canDecreaseFontSize
+
+        case #selector(actualFontSize(_:)):
+            return !Preferences.shared.isFontSizeDefault
 
         case #selector(reopenClosedTab(_:)):
             return !recentlyClosedFiles.isEmpty

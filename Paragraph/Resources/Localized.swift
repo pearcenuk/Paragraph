@@ -81,6 +81,9 @@ enum L10n {
     static let commandToggleWorkspaceBrowser = String(localized: "Workspace Browser", comment: "View menu; a checked item")
     static let commandToggleWordCount = String(localized: "Word Count", comment: "View menu; a checked item")
     static let commandFullScreen = String(localized: "Enter Full Screen", comment: "View menu")
+    static let commandBigger = String(localized: "Bigger", comment: "View menu; increases the text size")
+    static let commandSmaller = String(localized: "Smaller", comment: "View menu; decreases the text size")
+    static let commandActualSize = String(localized: "Actual Size", comment: "View menu; restores the default text size")
 
     static let commandQuickOpen = String(localized: "Quick Open…", comment: "Navigate menu")
     static let commandFocusBrowser = String(localized: "Move Focus to Workspace Browser", comment: "Navigate menu")

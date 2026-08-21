@@ -92,6 +92,28 @@
         }
       }
     },
+    "Actual Size": {
+      "comment": "View menu; restores the default text size",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actual Size"
+          }
+        }
+      }
+    },
+    "Bigger": {
+      "comment": "View menu; increases the text size",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bigger"
+          }
+        }
+      }
+    },
     "Bring All to Front": {
       "comment": "Window menu",
       "localizations": {
@@ -1089,6 +1111,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Show Writing Check Results"
+          }
+        }
+      }
+    },
+    "Smaller": {
+      "comment": "View menu; decreases the text size",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smaller"
           }
         }
       }

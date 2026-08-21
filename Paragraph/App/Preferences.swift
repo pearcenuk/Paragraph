@@ -17,6 +17,7 @@ final class Preferences: ObservableObject {
         static let typewriterMode = "typewriterMode"
         static let focusMode = "focusMode"
         static let wordCountVisible = "wordCountVisible"
+        static let editorFontSize = "editorFontSize"
         static let workspaceBookmark = "workspaceBookmark"
         static let expandedFolders = "expandedFolders"
     }
@@ -31,7 +32,8 @@ final class Preferences: ObservableObject {
             Key.spellChecking: true,
             Key.typewriterMode: false,
             Key.focusMode: false,
-            Key.wordCountVisible: true
+            Key.wordCountVisible: true,
+            Key.editorFontSize: EditorTypography.defaultPointSize
         ])
         theme = ThemeIdentifier(rawValue: defaults.string(forKey: Key.theme) ?? "") ?? .light
         restorePreviousSession = defaults.bool(forKey: Key.restoreSession)
@@ -39,6 +41,7 @@ final class Preferences: ObservableObject {
         typewriterMode = defaults.bool(forKey: Key.typewriterMode)
         focusMode = defaults.bool(forKey: Key.focusMode)
         wordCountVisible = defaults.bool(forKey: Key.wordCountVisible)
+        editorFontSize = defaults.double(forKey: Key.editorFontSize)
     }
 
     // MARK: - Settings
@@ -68,6 +71,24 @@ final class Preferences: ObservableObject {
     @Published var wordCountVisible: Bool {
         didSet { defaults.set(wordCountVisible, forKey: Key.wordCountVisible) }
     }
+
+    /// Body text size, in points. Clamped on the way in so no stored value can
+    /// leave the writer with text too small to read or too large to work in.
+    @Published var editorFontSize: Double {
+        didSet {
+            let clamped = min(max(editorFontSize, EditorTypography.minimumPointSize),
+                              EditorTypography.maximumPointSize)
+            if clamped != editorFontSize {
+                editorFontSize = clamped
+                return
+            }
+            defaults.set(editorFontSize, forKey: Key.editorFontSize)
+        }
+    }
+
+    var canIncreaseFontSize: Bool { editorFontSize < EditorTypography.maximumPointSize }
+    var canDecreaseFontSize: Bool { editorFontSize > EditorTypography.minimumPointSize }
+    var isFontSizeDefault: Bool { editorFontSize == EditorTypography.defaultPointSize }
 
     // MARK: - Workspace
 

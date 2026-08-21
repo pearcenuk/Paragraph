@@ -73,6 +73,8 @@ struct Shortcut {
 /// - No command uses `⌃⌥`, which belongs to VoiceOver.
 /// - No command uses a bare `⌃` key, which AppKit text views bind to Emacs-style
 ///   cursor movement (`⌃A`, `⌃E`, `⌃P`, `⌃K` and the rest).
+/// - `⌘0` belongs to Actual Size in every Mac application that scales text, so
+///   the panes take `⌘1` and `⌘2` rather than `⌘1` and `⌘0`.
 enum AppCommand: String, CaseIterable {
     // File
     case newDocument
@@ -91,6 +93,9 @@ enum AppCommand: String, CaseIterable {
     case themeLight
     case themeDark
     case themeGreenScreen
+    case increaseFontSize
+    case decreaseFontSize
+    case actualFontSize
 
     // Navigate
     case quickOpen
@@ -128,6 +133,9 @@ enum AppCommand: String, CaseIterable {
         case .themeLight: return L10n.themeLight
         case .themeDark: return L10n.themeDark
         case .themeGreenScreen: return L10n.themeGreenScreen
+        case .increaseFontSize: return L10n.commandBigger
+        case .decreaseFontSize: return L10n.commandSmaller
+        case .actualFontSize: return L10n.commandActualSize
 
         case .quickOpen: return L10n.commandQuickOpen
         case .moveFocusToWorkspaceBrowser: return L10n.commandFocusBrowser
@@ -162,6 +170,9 @@ enum AppCommand: String, CaseIterable {
         case .toggleWorkspaceBrowser: return #selector(DocumentWindowController.toggleWorkspaceBrowser(_:))
         case .toggleWordCount: return #selector(AppDelegate.toggleWordCount(_:))
         case .themeLight, .themeDark, .themeGreenScreen: return #selector(AppDelegate.selectTheme(_:))
+        case .increaseFontSize: return #selector(AppDelegate.increaseFontSize(_:))
+        case .decreaseFontSize: return #selector(AppDelegate.decreaseFontSize(_:))
+        case .actualFontSize: return #selector(AppDelegate.actualFontSize(_:))
 
         case .quickOpen: return #selector(AppDelegate.showQuickOpen(_:))
         case .moveFocusToWorkspaceBrowser: return #selector(DocumentWindowController.moveFocusToWorkspaceBrowser(_:))
@@ -198,10 +209,13 @@ enum AppCommand: String, CaseIterable {
         case .toggleWorkspaceBrowser: return Shortcut("s", [.command, .option])
         case .toggleWordCount: return Shortcut("w", [.command, .control])
         case .themeLight, .themeDark, .themeGreenScreen: return nil
+        case .increaseFontSize: return Shortcut("+")
+        case .decreaseFontSize: return Shortcut("-")
+        case .actualFontSize: return Shortcut("0")
 
         case .quickOpen: return Shortcut("o", [.command, .shift])
         case .moveFocusToWorkspaceBrowser: return Shortcut("1")
-        case .moveFocusToEditor: return Shortcut("0")
+        case .moveFocusToEditor: return Shortcut("2")
         case .openInTab: return Shortcut("\r")
         case .openInNewWindow: return Shortcut("\r", [.command, .shift])
         case .showNextTab: return Shortcut("\t", [.control])
@@ -222,7 +236,7 @@ enum AppCommand: String, CaseIterable {
              .save, .saveAs, .revert, .revealInFinder, .print:
             return .file
         case .toggleWorkspaceBrowser, .toggleWordCount, .themeLight, .themeDark,
-             .themeGreenScreen:
+             .themeGreenScreen, .increaseFontSize, .decreaseFontSize, .actualFontSize:
             return .view
         case .quickOpen, .moveFocusToWorkspaceBrowser, .moveFocusToEditor,
              .openInTab, .openInNewWindow, .showNextTab, .showPreviousTab,

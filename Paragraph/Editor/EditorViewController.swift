@@ -106,6 +106,21 @@ final class EditorViewController: NSViewController {
             .sink { [weak self] identifier in self?.applyTheme(identifier.theme) }
             .store(in: &observers)
 
+        preferences.$editorFontSize
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                // The measure is derived from the font, so the column has to be
+                // remeasured as well as restyled.
+                self.textView.theme = Preferences.shared.currentTheme
+                self.textView.updateInsets()
+                self.textView.updateFocusHighlight()
+                if Preferences.shared.typewriterMode {
+                    self.textView.scrollCaretToTypewriterPosition()
+                }
+            }
+            .store(in: &observers)
+
         preferences.$typewriterMode
             .receive(on: RunLoop.main)
             .sink { [weak self] enabled in

@@ -178,6 +178,10 @@ enum MenuBuilder {
         add(.themeDark, to: themes)
         add(.themeGreenScreen, to: themes)
         menu.addItem(submenu(themes, titled: L10n.commandTheme))
+        menu.addItem(.separator())
+        add(.increaseFontSize, to: menu)
+        add(.decreaseFontSize, to: menu)
+        add(.actualFontSize, to: menu)
         // AppKit appends its own Enter Full Screen item to this menu, using the
         // key equivalent current for this version of macOS. Adding one here
         // would duplicate it.

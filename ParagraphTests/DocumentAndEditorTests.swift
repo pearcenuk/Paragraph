@@ -161,12 +161,25 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertGreaterThan(available, 1200, "the editor should have the window's width")
         XCTAssertEqual(columnWidth, preferred, accuracy: 1,
                        "the column should stop at its measure on a wide display")
-        XCTAssertLessThan(columnWidth, available / 2,
-                          "prose should not stretch across a large monitor")
 
         let inset = editor.textView.textContainerInset.width
         XCTAssertEqual(inset, (available - columnWidth) / 2, accuracy: 1,
                        "the leftover space should be split evenly, centring the column")
+
+        // The measure it holds is the one Paragraph chose.
+        let font = EditorTypography.bodyFont()
+        let characterWidth = ("n" as NSString).size(withAttributes: [.font: font]).width
+        XCTAssertEqual(columnWidth / characterWidth, EditorTypography.measureInCharacters,
+                       accuracy: 3,
+                       "the column should hold about \(Int(EditorTypography.measureInCharacters)) characters")
+
+        // The real cap is that the column stops growing, not that it lands under
+        // some fraction of the window: a wider typeface legitimately needs more
+        // points to hold the same number of characters. Checked last, because it
+        // re-lays the editor out at a different width.
+        let wider = layOutEditor(controller, windowWidth: 2400, collapseSidebar: true)
+        XCTAssertEqual(wider.textView.textContainer!.size.width, columnWidth, accuracy: 1,
+                       "the column must not keep growing with the window")
     }
 
     func testTheColumnStaysCentredWhenTheBrowserAppears() throws {
@@ -205,6 +218,49 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(editor.textView.textContainerInset.width,
                                     EditorTypography.horizontalPadding,
                                     "padding should survive in a narrow window")
+    }
+
+    func testTheWritingFontIsTheOneParagraphShips() {
+        BundledFonts.register()
+        XCTAssertTrue(BundledFonts.writingFontIsAvailable,
+                      "IBM Plex Sans is not registered from the bundle")
+        XCTAssertEqual(EditorTypography.bodyFont().familyName, BundledFonts.writingFontFamily)
+    }
+
+    func testTextSizeChangesAndStaysWithinBounds() {
+        let original = Preferences.shared.editorFontSize
+        defer { Preferences.shared.editorFontSize = original }
+
+        Preferences.shared.editorFontSize = EditorTypography.defaultPointSize
+        XCTAssertEqual(EditorTypography.bodyFont().pointSize, EditorTypography.defaultPointSize)
+
+        Preferences.shared.editorFontSize += EditorTypography.pointSizeStep
+        XCTAssertEqual(EditorTypography.bodyFont().pointSize,
+                       EditorTypography.defaultPointSize + EditorTypography.pointSizeStep)
+
+        // Bigger and Smaller cannot walk the writer off either end.
+        Preferences.shared.editorFontSize = 999
+        XCTAssertEqual(Preferences.shared.editorFontSize, EditorTypography.maximumPointSize)
+        XCTAssertFalse(Preferences.shared.canIncreaseFontSize)
+
+        Preferences.shared.editorFontSize = 1
+        XCTAssertEqual(Preferences.shared.editorFontSize, EditorTypography.minimumPointSize)
+        XCTAssertFalse(Preferences.shared.canDecreaseFontSize)
+    }
+
+    func testTheMeasureHoldsWhenTheTextSizeChanges() throws {
+        // Bigger text means a wider column, because the measure is counted in
+        // characters rather than points.
+        let original = Preferences.shared.editorFontSize
+        defer { Preferences.shared.editorFontSize = original }
+
+        Preferences.shared.editorFontSize = EditorTypography.defaultPointSize
+        let small = EditorTypography.preferredColumnWidth(for: EditorTypography.bodyFont())
+
+        Preferences.shared.editorFontSize = EditorTypography.defaultPointSize + 6
+        let large = EditorTypography.preferredColumnWidth(for: EditorTypography.bodyFont())
+
+        XCTAssertGreaterThan(large, small, "the column should widen with the text")
     }
 
     func testProseStaysLeftAligned() {

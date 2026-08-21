@@ -7,19 +7,31 @@ import AppKit
 /// stays correct if the body size changes for accessibility reasons.
 enum EditorTypography {
 
-    /// The system serif (New York). Chosen for long-form prose rather than a
-    /// monospace, because Paragraph is for drafting chapters, not code.
-    /// Falls back to the default system font if the serif design is missing.
-    static func bodyFont() -> NSFont {
-        let size = bodyPointSize
-        let base = NSFont.systemFont(ofSize: size)
-        guard let descriptor = base.fontDescriptor.withDesign(.serif),
-              let serif = NSFont(descriptor: descriptor, size: size)
-        else { return base }
-        return serif
+    /// IBM Plex Sans, shipped with the application. An open, level humanist
+    /// sans that stays comfortable over a long session.
+    ///
+    /// Falls back to the system font if registration failed, so a missing file
+    /// degrades to something readable rather than to something arbitrary.
+    static func bodyFont(size: CGFloat? = nil) -> NSFont {
+        let pointSize = size ?? bodyPointSize
+        BundledFonts.register()
+        if let font = NSFont(name: BundledFonts.writingFontFamily, size: pointSize) {
+            return font
+        }
+        return NSFont.systemFont(ofSize: pointSize)
     }
 
-    static let bodyPointSize: CGFloat = 17
+    /// The writer's current text size. Changed with Bigger and Smaller, and
+    /// reset with Actual Size — the same three commands every Mac text
+    /// application has. There is no font picker and no size field.
+    static var bodyPointSize: CGFloat {
+        CGFloat(Preferences.shared.editorFontSize)
+    }
+
+    static let defaultPointSize: Double = 17
+    static let minimumPointSize: Double = 11
+    static let maximumPointSize: Double = 32
+    static let pointSizeStep: Double = 1
 
     /// Line height as a multiple of the font size. Loose enough to read for
     /// hours without becoming double-spaced.

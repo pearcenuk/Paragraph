@@ -20,6 +20,7 @@ belong in Paragraph.**
   comfortable measure
 - Uses the system's own spell checking, and shows no other analysis while you
   type
+- Sets prose in IBM Plex Sans, at a size you can change with `⌘+` and `⌘-`
 - Shows the current document's word count, and nothing else
 - Offers Light, Dark and Green Screen themes
 - Offers Typewriter Mode and Focus Mode
@@ -134,11 +135,13 @@ from the same table the menu bar is built from.
 | Quick Open… | `⇧⌘O` |
 | Show/Hide Workspace Browser | `⌥⌘S` |
 | Move Focus to Workspace Browser | `⌘1` |
-| Move Focus to Editor | `⌘0` |
+| Move Focus to Editor | `⌘2` |
 | Open in Tab | `⌘↩` |
 | Open in New Window | `⇧⌘↩` |
 | Show Next / Previous Tab | `⌃⇥` / `⌃⇧⇥` |
 | Reopen Closed Tab | `⇧⌘T` |
+| Bigger / Smaller text | `⌘+` / `⌘-` |
+| Actual Size | `⌘0` |
 | Typewriter Mode | `⌃⌘T` |
 | Focus Mode | `⌃⌘P` |
 | Show/Hide Word Count | `⌃⌘W` |
@@ -150,6 +153,20 @@ New, Open, Save, Save As, Close, Print, Undo, Find, Full Screen and the rest
 keep their standard macOS keys. `⌘P` is left to Print, which is why Quick Open
 is `⇧⌘O`. Full Screen is not defined by Paragraph at all: AppKit adds its own
 item with whatever key the running version of macOS uses.
+
+## Typography
+
+Prose is set in **IBM Plex Sans**, which ships inside the application bundle
+and is registered at launch, so it looks the same on every machine. The size
+is the one thing about the type a writer can change — `⌘+`, `⌘-` and `⌘0`,
+clamped to a readable range and remembered between launches.
+
+There is still no font picker and no colour picker. The measure is counted in
+characters rather than points, so making the text bigger widens the column to
+keep about 66 characters on a line rather than making lines shorter.
+
+`⌘0` belongs to Actual Size in every Mac application that scales text, so the
+panes take `⌘1` and `⌘2`.
 
 ## Word counting
 
@@ -185,4 +202,9 @@ language-specific Writing Check rules.
 
 ## Licence
 
-None yet — see [LICENCE-NOTICE.md](LICENCE-NOTICE.md).
+Paragraph itself has no licence yet — see [LICENCE-NOTICE.md](LICENCE-NOTICE.md).
+
+The bundled typeface, **IBM Plex Sans**, is © IBM Corp. and licensed under the
+SIL Open Font License 1.1. The licence text travels with the font, in
+`Paragraph/Resources/Fonts/IBMPlexSans-OFL.txt` and inside the application
+bundle. The application icon is a pilcrow set in the same typeface.
