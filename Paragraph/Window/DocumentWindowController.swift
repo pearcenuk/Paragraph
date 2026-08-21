@@ -42,6 +42,7 @@ final class DocumentWindowController: NSWindowController {
 
         super.init(window: window)
         shouldCascadeWindows = true
+        window.delegate = self
         buildContent()
     }
 
@@ -198,6 +199,25 @@ extension DocumentWindowController: NSMenuItemValidation {
         default:
             return true
         }
+    }
+}
+
+// MARK: - Window delegate
+
+extension DocumentWindowController: NSWindowDelegate {
+
+    /// Zooming fills the display the window is actually on.
+    ///
+    /// Left to itself, AppKit derives the zoomed size from a frame it remembered
+    /// earlier. Move a window to a second display and double-click its title
+    /// bar, and it can size itself for the display it used to be on instead —
+    /// which looks like the window refusing to fill the screen.
+    ///
+    /// Returning the current screen's visible frame makes the answer depend on
+    /// where the window is now. Double-clicking again still restores the
+    /// previous size: AppKit remembers that separately.
+    func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
+        (window.screen ?? NSScreen.main)?.visibleFrame ?? newFrame
     }
 }
 

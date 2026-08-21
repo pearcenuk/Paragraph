@@ -211,7 +211,7 @@ Application behaviour is tested against the real objects:
 xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Debug test
 ```
 
-Currently 101 package tests and 81 application tests, with no compiler warnings.
+Currently 101 package tests and 83 application tests, with no compiler warnings.
 
 ### Why macOS 13
 
@@ -220,6 +220,17 @@ Chosen to be as old as possible without forcing compatibility code into the appl
 [`ARCHITECTURE.md`](ARCHITECTURE.md) explains why the document, window and tab layers are AppKit and what that buys.
 
 ---
+
+## Windows and displays
+
+Zooming a window — double-clicking its title bar — fills the display the window
+is actually on. Left to itself AppKit derives that size from a frame it
+remembered earlier, which on a second display can be sized for the display the
+window used to be on.
+
+Changing workspace keeps the window where you put it, including which display
+it is on, even when the old folder's documents close and a fresh window takes
+their place.
 
 ## Known limitations
 

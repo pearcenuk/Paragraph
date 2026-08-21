@@ -46,27 +46,40 @@ final class WorkspaceController: ObservableObject {
     /// rather than leaving half a workspace open.
     func setWorkspace(url: URL) {
         guard let previous = workspace else {
-            adopt(url)
+            adopt(url, inheritingFrame: frontmostDocumentWindowFrame())
             return
         }
         let belonging = NSDocumentController.shared.documents.filter { document in
             document.fileURL.map { previous.contains($0) } ?? false
         }
         guard !belonging.isEmpty else {
-            adopt(url)
+            adopt(url, inheritingFrame: frontmostDocumentWindowFrame())
             return
         }
+
+        // Where the writer had put the window. If closing the old workspace's
+        // files empties the screen, the replacement should appear here rather
+        // than back at a default size on the main display.
+        let frame = frontmostDocumentWindowFrame()
 
         let closer = DocumentCloser(documents: belonging) { [weak self] closed in
             self?.pendingCloser = nil
             guard closed else { return }
-            self?.adopt(url)
+            self?.adopt(url, inheritingFrame: frame)
         }
         pendingCloser = closer
         closer.start()
     }
 
-    private func adopt(_ url: URL) {
+    private func frontmostDocumentWindowFrame() -> NSRect? {
+        let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first {
+            $0.windowController is DocumentWindowController && $0.isVisible
+        }
+        guard let window, window.windowController is DocumentWindowController else { return nil }
+        return window.frame
+    }
+
+    private func adopt(_ url: URL, inheritingFrame frame: NSRect?) {
         // The bookmark is what allows this folder — including one inside iCloud
         // Drive — to be reopened on a later launch without asking again.
         if let bookmark = Workspace.makeBookmark(for: url) {
@@ -83,9 +96,18 @@ final class WorkspaceController: ObservableObject {
             let hasWindow = NSApp.windows.contains {
                 $0.windowController is DocumentWindowController && $0.isVisible
             }
-            if !hasWindow {
-                NSDocumentController.shared.newDocument(nil)
+            guard !hasWindow else { return }
+            NSDocumentController.shared.newDocument(nil)
+
+            // Put it back where the writer had the last one, on the display they
+            // were using. Without this the replacement lands at its default size
+            // on the main screen, and a window that was filling a second monitor
+            // appears to have jumped back.
+            guard let frame else { return }
+            let replacement = NSApp.windows.first {
+                $0.windowController is DocumentWindowController && $0.isVisible
             }
+            replacement?.setFrame(frame, display: true)
         }
     }
 

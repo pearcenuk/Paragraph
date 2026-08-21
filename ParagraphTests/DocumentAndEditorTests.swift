@@ -581,6 +581,39 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertFalse(controller.isSidebarCollapsed)
     }
 
+    /// Left to itself, AppKit zooms a window using a frame it remembered
+    /// earlier — which on a second display can be sized for the display the
+    /// window used to be on, so it appears to refuse to fill the screen.
+    func testZoomingFillsTheDisplayTheWindowIsOn() throws {
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        let window = try XCTUnwrap(controller.window)
+        _ = window
+
+        for screen in NSScreen.screens {
+            // Put the window on this screen, then ask what zoom would do.
+            let origin = NSPoint(x: screen.visibleFrame.midX - 300,
+                                 y: screen.visibleFrame.midY - 200)
+            window.setFrame(NSRect(origin: origin, size: NSSize(width: 600, height: 400)),
+                            display: false)
+
+            let standard = controller.windowWillUseStandardFrame(window, defaultFrame: .zero)
+            let expected = (window.screen ?? NSScreen.main)?.visibleFrame
+
+            XCTAssertEqual(standard, expected,
+                           "zoom should fill the display the window is on")
+            XCTAssertGreaterThan(standard.width, 0)
+        }
+    }
+
+    func testTheWindowControllerIsItsWindowsDelegate() throws {
+        // The zoom behaviour above only takes effect if the delegate is wired up.
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        let window = try XCTUnwrap(controller.window)
+        XCTAssertTrue(window.delegate === controller)
+    }
+
     func testWindowsDoNotUseSystemRestoration() throws {
         // Paragraph restores its own session; two mechanisms would fight.
         let document = try makeDocument("Text.\n")
