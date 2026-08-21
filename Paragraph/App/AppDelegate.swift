@@ -37,12 +37,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         WorkspaceController.shared.restoreSavedWorkspace()
 
-        if Preferences.shared.restorePreviousSession, let session = SessionStore.load() {
+        let expectedSession = Self.hasRestorableSession
+        if expectedSession, let session = SessionStore.load() {
             // Restoration opens and closes windows as it works; saving halfway
             // through would overwrite the very session being restored.
             isRestoring = true
             didRestoreSession = SessionRestorer.restore(session)
             isRestoring = false
+        }
+
+        // A session was expected but nothing in it could be opened — every file
+        // had moved or gone. AppKit was told not to open a blank document, so
+        // one is opened now rather than leaving the writer staring at nothing.
+        if expectedSession, !didRestoreSession {
+            NSDocumentController.shared.newDocument(nil)
         }
 
         NotificationCenter.default
@@ -68,8 +76,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     /// A blank document only when there is nothing to come back to.
+    ///
+    /// AppKit asks this *before* `applicationDidFinishLaunching(_:)`, so it
+    /// cannot be answered from a flag that restoration sets — the answer is read
+    /// from the stored session directly.
     func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool {
-        !didRestoreSession
+        !Self.isRunningTests && !Self.hasRestorableSession
+    }
+
+    /// A saved session with at least one window in it.
+    static var hasRestorableSession: Bool {
+        guard Preferences.shared.restorePreviousSession else { return false }
+        return !(SessionStore.load()?.windows.isEmpty ?? true)
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

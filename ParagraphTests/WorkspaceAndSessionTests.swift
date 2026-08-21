@@ -181,6 +181,43 @@ final class SessionTests: XCTestCase {
                        "an empty session should fall back to normal launch behaviour")
     }
 
+    /// AppKit asks whether to open an untitled document *before*
+    /// `applicationDidFinishLaunching(_:)`, so this decision must be readable
+    /// from stored state alone. Answering it from a flag that restoration sets
+    /// put a blank window on screen beside every restored session.
+    func testUntitledIsSuppressedOnlyWhenASessionHasWindows() {
+        let savedSession = SessionStore.load()
+        let savedSetting = Preferences.shared.restorePreviousSession
+        defer {
+            if let savedSession { SessionStore.save(savedSession) } else { SessionStore.clear() }
+            Preferences.shared.restorePreviousSession = savedSetting
+        }
+
+        Preferences.shared.restorePreviousSession = true
+
+        SessionStore.clear()
+        XCTAssertFalse(AppDelegate.hasRestorableSession, "no session file is nothing to restore")
+
+        SessionStore.save(SessionState(version: 1, windows: []))
+        XCTAssertFalse(AppDelegate.hasRestorableSession,
+                       "an empty session is nothing to come back to")
+
+        SessionStore.save(SessionState(version: 1, windows: [
+            WindowSession(
+                frame: NSStringFromRect(NSRect(x: 0, y: 0, width: 900, height: 700)),
+                sidebarCollapsed: false,
+                activeTabIndex: 0,
+                tabs: [TabSession(bookmark: nil, path: "/tmp/A.md",
+                                  selectionLocation: 0, scrollFraction: 0)]
+            )
+        ]))
+        XCTAssertTrue(AppDelegate.hasRestorableSession)
+
+        Preferences.shared.restorePreviousSession = false
+        XCTAssertFalse(AppDelegate.hasRestorableSession,
+                       "with restoration switched off, every launch starts fresh")
+    }
+
     func testViewStateSurvivesAsPreferences() {
         let defaults = UserDefaults(suiteName: "ParagraphTests-\(UUID().uuidString)")!
         let preferences = Preferences(defaults: defaults)
