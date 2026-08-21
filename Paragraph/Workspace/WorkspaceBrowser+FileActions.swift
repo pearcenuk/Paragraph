@@ -11,8 +11,10 @@ extension WorkspaceBrowserViewController {
     func makeContextMenu() -> NSMenu {
         let menu = NSMenu()
         menu.delegate = self
-        menu.addItem(withTitle: L10n.commandOpenInTab,
-                     action: #selector(contextOpenInTab), keyEquivalent: "")
+        menu.addItem(withTitle: L10n.commandOpenSelected,
+                     action: #selector(contextOpen), keyEquivalent: "")
+        menu.addItem(withTitle: L10n.commandOpenInNewTab,
+                     action: #selector(contextOpenInNewTab), keyEquivalent: "")
         menu.addItem(withTitle: L10n.commandOpenInNewWindow,
                      action: #selector(contextOpenInNewWindow), keyEquivalent: "")
         menu.addItem(.separator())
@@ -36,14 +38,19 @@ extension WorkspaceBrowserViewController {
         return outlineView.item(atRow: row) as? WorkspaceItem
     }
 
-    @objc private func contextOpenInTab() {
+    @objc private func contextOpen() {
         guard let item = contextItem, !item.isDirectory else { return }
-        delegate?.workspaceBrowser(self, openInTab: item.url)
+        delegate?.workspaceBrowser(self, open: item.url, placement: .replacingTab(view.window))
+    }
+
+    @objc private func contextOpenInNewTab() {
+        guard let item = contextItem, !item.isDirectory else { return }
+        delegate?.workspaceBrowser(self, open: item.url, placement: .newTab(in: view.window))
     }
 
     @objc private func contextOpenInNewWindow() {
         guard let item = contextItem, !item.isDirectory else { return }
-        delegate?.workspaceBrowser(self, openInNewWindow: item.url)
+        delegate?.workspaceBrowser(self, open: item.url, placement: .newWindow)
     }
 
     @objc private func contextRevealInFinder() {
@@ -151,7 +158,7 @@ extension WorkspaceBrowserViewController: NSMenuDelegate {
 
         for menuItem in menu.items where !menuItem.isSeparatorItem {
             switch menuItem.title {
-            case L10n.commandOpenInTab, L10n.commandOpenInNewWindow:
+            case L10n.commandOpenSelected, L10n.commandOpenInNewTab, L10n.commandOpenInNewWindow:
                 menuItem.isEnabled = isFile
             default:
                 menuItem.isEnabled = exists

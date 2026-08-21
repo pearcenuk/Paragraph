@@ -74,10 +74,17 @@ final class QuickOpenModel: ObservableObject {
     }
 }
 
+/// How Quick Open should place the file it opens.
+enum QuickOpenPlacement {
+    case inPlace
+    case newTab
+    case newWindow
+}
+
 struct QuickOpenView: View {
     @ObservedObject var model: QuickOpenModel
     let theme: Theme
-    var onOpen: (WorkspaceItem, Bool) -> Void
+    var onOpen: (WorkspaceItem, QuickOpenPlacement) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
@@ -110,7 +117,7 @@ struct QuickOpenView: View {
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     model.selectedIndex = index
-                                    onOpen(item, false)
+                                    onOpen(item, .inPlace)
                                 }
                             }
                         }
@@ -197,7 +204,7 @@ final class QuickOpenPanelController: NSObject {
         let view = QuickOpenView(
             model: model,
             theme: Preferences.shared.currentTheme,
-            onOpen: { [weak self] item, newWindow in self?.open(item, inNewWindow: newWindow) }
+            onOpen: { [weak self] item, placement in self?.open(item, placement: placement) }
         )
         let hosting = NSHostingView(rootView: view)
 
@@ -247,7 +254,12 @@ final class QuickOpenPanelController: NSObject {
                 return nil
             case 36, 76:                                    // Return, Enter
                 if let item = self.model.selectedItem {
-                    self.open(item, inNewWindow: event.modifierFlags.contains(.shift))
+                    let modifiers = event.modifierFlags
+                    let placement: QuickOpenPlacement =
+                        modifiers.contains(.shift) ? .newWindow
+                        : modifiers.contains(.option) ? .newTab
+                        : .inPlace
+                    self.open(item, placement: placement)
                 }
                 return nil
             case 53:                                        // Escape
@@ -259,17 +271,18 @@ final class QuickOpenPanelController: NSObject {
         }
     }
 
-    private func open(_ item: WorkspaceItem, inNewWindow: Bool) {
+    private func open(_ item: WorkspaceItem, placement: QuickOpenPlacement) {
         // Capture the destination window *before* dismissing the panel, or
         // `NSApp.mainWindow` may momentarily be nothing at all.
         let destination = NSApp.mainWindow ?? NSApp.windows.first {
             $0.windowController is DocumentWindowController && $0.isVisible
         }
         close()
-        DocumentOpener.open(
-            url: item.url,
-            placement: inNewWindow ? .newWindow : .tab(in: destination)
-        )
+        switch placement {
+        case .inPlace: DocumentOpener.open(url: item.url, placement: .replacingTab(destination))
+        case .newTab: DocumentOpener.open(url: item.url, placement: .newTab(in: destination))
+        case .newWindow: DocumentOpener.open(url: item.url, placement: .newWindow)
+        }
     }
 }
 

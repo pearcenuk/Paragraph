@@ -70,17 +70,19 @@ struct Theme {
         case .greenScreen:
             // A dark room and green text, and nothing else. No scan lines, no
             // glow, no curvature: those would be decoration, and decoration is
-            // not writing.
+            // not writing. The green is a saturated phosphor rather than a pale
+            // mint — brighter in hue, a little darker in value, still 10:1
+            // against its background.
             return Theme(
                 identifier: .greenScreen,
                 appearanceName: .darkAqua,
                 editorBackground: NSColor(srgbRed: 0.039, green: 0.055, blue: 0.039, alpha: 1),
-                bodyText: NSColor(srgbRed: 0.600, green: 0.870, blue: 0.600, alpha: 1),
-                deEmphasisedText: NSColor(srgbRed: 0.310, green: 0.450, blue: 0.310, alpha: 1),
-                insertionPoint: NSColor(srgbRed: 0.706, green: 0.949, blue: 0.706, alpha: 1),
-                selectionBackground: NSColor(srgbRed: 0.129, green: 0.259, blue: 0.129, alpha: 1),
-                secondaryText: NSColor(srgbRed: 0.435, green: 0.612, blue: 0.435, alpha: 1),
-                separator: NSColor(srgbRed: 0.176, green: 0.271, blue: 0.176, alpha: 1),
+                bodyText: NSColor(srgbRed: 0.431, green: 0.816, blue: 0.431, alpha: 1),
+                deEmphasisedText: NSColor(srgbRed: 0.282, green: 0.471, blue: 0.298, alpha: 1),
+                insertionPoint: NSColor(srgbRed: 0.510, green: 0.910, blue: 0.510, alpha: 1),
+                selectionBackground: NSColor(srgbRed: 0.118, green: 0.259, blue: 0.125, alpha: 1),
+                secondaryText: NSColor(srgbRed: 0.376, green: 0.620, blue: 0.392, alpha: 1),
+                separator: NSColor(srgbRed: 0.157, green: 0.267, blue: 0.165, alpha: 1),
                 sidebarBackground: NSColor(srgbRed: 0.020, green: 0.031, blue: 0.020, alpha: 1)
             )
         }

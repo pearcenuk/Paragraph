@@ -193,7 +193,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction func reopenClosedTab(_ sender: Any?) {
         guard let url = recentlyClosedFiles.popLast() else { return }
-        DocumentOpener.open(url: url, placement: .tab(in: NSApp.mainWindow))
+        DocumentOpener.open(url: url, placement: .newTab(in: NSApp.mainWindow))
     }
 
     // MARK: - Writing

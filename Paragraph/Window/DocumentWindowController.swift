@@ -172,8 +172,12 @@ final class DocumentWindowController: NSWindowController {
         editorViewController.focusEditor()
     }
 
-    @IBAction func openSelectedFileInTab(_ sender: Any?) {
-        browserViewController.openSelectedInTab()
+    @IBAction func openSelectedFileInPlace(_ sender: Any?) {
+        browserViewController.openSelectedInPlace()
+    }
+
+    @IBAction func openSelectedFileInNewTab(_ sender: Any?) {
+        browserViewController.openSelectedInNewTab()
     }
 
     @IBAction func openSelectedFileInNewWindow(_ sender: Any?) {
@@ -192,7 +196,9 @@ extension DocumentWindowController: NSMenuItemValidation {
             menuItem.state = isSidebarCollapsed ? .off : .on
             return true
 
-        case #selector(openSelectedFileInTab(_:)), #selector(openSelectedFileInNewWindow(_:)):
+        case #selector(openSelectedFileInPlace(_:)),
+             #selector(openSelectedFileInNewTab(_:)),
+             #selector(openSelectedFileInNewWindow(_:)):
             return browserViewController.selectedItem.map { !$0.isDirectory } ?? false
 
         default:
@@ -240,12 +246,20 @@ extension DocumentWindowController: NSToolbarDelegate {
 
 extension DocumentWindowController: WorkspaceBrowserDelegate {
 
-    func workspaceBrowser(_ browser: WorkspaceBrowserViewController, openInTab url: URL) {
-        DocumentOpener.open(url: url, placement: .tab(in: window))
-    }
-
-    func workspaceBrowser(_ browser: WorkspaceBrowserViewController, openInNewWindow url: URL) {
-        DocumentOpener.open(url: url, placement: .newWindow)
+    func workspaceBrowser(
+        _ browser: WorkspaceBrowserViewController,
+        open url: URL,
+        placement: OpenPlacement
+    ) {
+        // The browser names the window it belongs to; resolve it here so a
+        // placement made before the window existed still lands in this group.
+        let resolved: OpenPlacement
+        switch placement {
+        case .replacingTab: resolved = .replacingTab(window)
+        case .newTab: resolved = .newTab(in: window)
+        case .newWindow: resolved = .newWindow
+        }
+        DocumentOpener.open(url: url, placement: resolved)
     }
 
     func workspaceBrowserDidRequestEditorFocus(_ browser: WorkspaceBrowserViewController) {

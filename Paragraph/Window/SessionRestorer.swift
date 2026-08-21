@@ -175,7 +175,7 @@ enum SessionRestorer {
             panel.allowsMultipleSelection = true
             if panel.runModal() == .OK {
                 for url in panel.urls {
-                    DocumentOpener.open(url: url, placement: .tab(in: NSApp.mainWindow))
+                    DocumentOpener.open(url: url, placement: .newTab(in: NSApp.mainWindow))
                 }
             }
         }

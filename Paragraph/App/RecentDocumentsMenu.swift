@@ -39,6 +39,6 @@ final class RecentDocumentsMenuDelegate: NSObject, NSMenuDelegate {
 
     @objc private func openRecentDocument(_ sender: NSMenuItem) {
         guard let url = sender.representedObject as? URL else { return }
-        DocumentOpener.open(url: url, placement: .tab(in: NSApp.mainWindow))
+        DocumentOpener.open(url: url, placement: .newTab(in: NSApp.mainWindow))
     }
 }

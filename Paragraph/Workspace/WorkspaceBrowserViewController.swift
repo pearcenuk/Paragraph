@@ -2,8 +2,7 @@ import AppKit
 import Combine
 
 protocol WorkspaceBrowserDelegate: AnyObject {
-    func workspaceBrowser(_ browser: WorkspaceBrowserViewController, openInTab url: URL)
-    func workspaceBrowser(_ browser: WorkspaceBrowserViewController, openInNewWindow url: URL)
+    func workspaceBrowser(_ browser: WorkspaceBrowserViewController, open url: URL, placement: OpenPlacement)
     func workspaceBrowserDidRequestEditorFocus(_ browser: WorkspaceBrowserViewController)
     func workspaceBrowserDidRequestChooseFolder(_ browser: WorkspaceBrowserViewController)
 }
@@ -297,17 +296,19 @@ final class WorkspaceBrowserViewController: NSViewController {
                 outlineView.expandItem(item)
             }
         } else {
-            delegate?.workspaceBrowser(self, openInTab: item.url)
+            openSelected(.replacingTab(view.window))
         }
     }
 
-    func openSelectedInTab() {
+    /// Double-clicking a file opens it where the writer is already looking,
+    /// which is what every editor does. Opening *another* tab is a deliberate
+    /// act: the contextual menu, a middle-click, or Option-Return.
+    func openSelected(_ placement: OpenPlacement) {
         guard let item = selectedItem, !item.isDirectory else { return }
-        delegate?.workspaceBrowser(self, openInTab: item.url)
+        delegate?.workspaceBrowser(self, open: item.url, placement: placement)
     }
 
-    func openSelectedInNewWindow() {
-        guard let item = selectedItem, !item.isDirectory else { return }
-        delegate?.workspaceBrowser(self, openInNewWindow: item.url)
-    }
+    func openSelectedInPlace() { openSelected(.replacingTab(view.window)) }
+    func openSelectedInNewTab() { openSelected(.newTab(in: view.window)) }
+    func openSelectedInNewWindow() { openSelected(.newWindow) }
 }

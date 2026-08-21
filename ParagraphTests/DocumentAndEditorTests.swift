@@ -379,6 +379,75 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertTrue(controller.editorViewController.textView.isContinuousSpellCheckingEnabled)
     }
 
+    // MARK: - How files open
+
+    /// Opening a file from the browser should put it where the writer is
+    /// already looking. Adding a tab is a deliberate act, not the default.
+    func testOpeningInPlaceReplacesACleanTab() throws {
+        let first = try makeFile("First.md", "# First\n")
+        let second = try makeFile("Second.md", "# Second\n")
+
+        let opened = expectation(description: "first opened")
+        DocumentOpener.open(url: first, placement: .newTab(in: nil))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { opened.fulfill() }
+        wait(for: [opened], timeout: 5)
+
+        let firstWindow = try XCTUnwrap(windowShowing(first))
+
+        let replaced = expectation(description: "second opened")
+        DocumentOpener.open(url: second, placement: .replacingTab(firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { replaced.fulfill() }
+        wait(for: [replaced], timeout: 5)
+
+        XCTAssertNotNil(windowShowing(second), "the file asked for should be open")
+        XCTAssertNil(windowShowing(first),
+                     "a clean tab should give way rather than accumulate")
+
+        windowShowing(second)?.close()
+    }
+
+    /// The exception that makes the behaviour safe: unsaved work is never
+    /// closed to make room for another file.
+    func testOpeningInPlaceKeepsATabWithUnsavedChanges() throws {
+        let first = try makeFile("Third.md", "# Third\n")
+        let second = try makeFile("Fourth.md", "# Fourth\n")
+
+        let opened = expectation(description: "opened")
+        DocumentOpener.open(url: first, placement: .newTab(in: nil))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { opened.fulfill() }
+        wait(for: [opened], timeout: 5)
+
+        let firstWindow = try XCTUnwrap(windowShowing(first))
+        let firstDocument = try XCTUnwrap(
+            (firstWindow.windowController as? DocumentWindowController)?.markdownDocument
+        )
+        firstDocument.textStorage.replaceCharacters(in: NSRange(location: 0, length: 0),
+                                                    with: "edited ")
+        XCTAssertTrue(firstDocument.isDocumentEdited)
+
+        let replaced = expectation(description: "second opened")
+        DocumentOpener.open(url: second, placement: .replacingTab(firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { replaced.fulfill() }
+        wait(for: [replaced], timeout: 5)
+
+        XCTAssertNotNil(windowShowing(second))
+        XCTAssertNotNil(windowShowing(first),
+                        "unsaved work must not be closed to make room for another file")
+
+        firstDocument.updateChangeCount(.changeCleared)
+        windowShowing(first)?.close()
+        windowShowing(second)?.close()
+    }
+
+    private func windowShowing(_ url: URL) -> NSWindow? {
+        NSApp.windows.first { window in
+            guard let controller = window.windowController as? DocumentWindowController,
+                  window.isVisible
+            else { return false }
+            return controller.markdownDocument.fileURL?.standardizedFileURL == url.standardizedFileURL
+        }
+    }
+
     // MARK: - Dragging files onto the editor
 
     func testDroppedMarkdownFilesAreRecognisedAsOpenable() throws {

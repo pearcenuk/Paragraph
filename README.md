@@ -136,7 +136,8 @@ from the same table the menu bar is built from.
 | Show/Hide Workspace Browser | `⌥⌘S` |
 | Move Focus to Workspace Browser | `⌘1` |
 | Move Focus to Editor | `⌘2` |
-| Open in Tab | `⌘↩` |
+| Open | `⌘↩` |
+| Open in New Tab | `⌥⌘↩` |
 | Open in New Window | `⇧⌘↩` |
 | Show Next / Previous Tab | `⌃⇥` / `⌃⇧⇥` |
 | Reopen Closed Tab | `⇧⌘T` |
@@ -153,6 +154,16 @@ New, Open, Save, Save As, Close, Print, Undo, Find, Full Screen and the rest
 keep their standard macOS keys. `⌘P` is left to Print, which is why Quick Open
 is `⇧⌘O`. Full Screen is not defined by Paragraph at all: AppKit adds its own
 item with whatever key the running version of macOS uses.
+
+## Opening files
+
+Double-clicking a file in the browser opens it **in the tab you are already
+looking at**, the way an editor does — the tab it replaces is closed only if it
+holds nothing unsaved. A file with unsaved changes is never closed to make room
+for another; you simply end up with an extra tab.
+
+Opening an *additional* tab is deliberate: middle-click, `⌥↩`, or the
+contextual menu. `⇧↩` opens a new window.
 
 ## Typography
 

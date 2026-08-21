@@ -246,7 +246,7 @@ final class ParagraphTextView: NSTextView {
         guard !files.isEmpty else { return super.performDragOperation(sender) }
 
         for url in files {
-            DocumentOpener.open(url: url, placement: .tab(in: window))
+            DocumentOpener.open(url: url, placement: .newTab(in: window))
         }
         return true
     }

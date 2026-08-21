@@ -106,7 +106,7 @@ final class ShortcutMapTests: XCTestCase {
         // The commands the specification asks for by name.
         let required: [AppCommand] = [
             .toggleWorkspaceBrowser, .moveFocusToWorkspaceBrowser, .moveFocusToEditor,
-            .quickOpen, .openInTab, .openInNewWindow, .showNextTab, .showPreviousTab,
+            .quickOpen, .openInPlace, .openInNewTab, .openInNewWindow, .showNextTab, .showPreviousTab,
             .closeTab, .reopenClosedTab, .toggleTypewriterMode, .toggleFocusMode,
             .toggleWordCount, .runWritingCheck, .keyboardShortcuts
         ]

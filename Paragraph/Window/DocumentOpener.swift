@@ -2,8 +2,11 @@ import AppKit
 
 /// Where a file should appear when it is opened.
 enum OpenPlacement {
-    /// As a tab in the given window's tab group, or a new window if there is none.
-    case tab(in: NSWindow?)
+    /// In place of the given tab — the ordinary way an editor opens a file.
+    /// The tab being replaced is only closed if it holds nothing unsaved.
+    case replacingTab(NSWindow?)
+    /// Alongside, as an additional tab.
+    case newTab(in: NSWindow?)
     case newWindow
 }
 
@@ -49,7 +52,7 @@ enum DocumentOpener {
 
     static func place(_ document: MarkdownDocument, placement: OpenPlacement) {
         switch placement {
-        case .tab(let requestedWindow):
+        case .replacingTab(let requestedWindow), .newTab(let requestedWindow):
             let target = requestedWindow ?? NSApp.mainWindow
 
             // Never open a second tab on a file this window group already shows.
@@ -66,12 +69,41 @@ enum DocumentOpener {
             }
             window.makeKeyAndOrderFront(nil)
 
+            // Replacing: the tab that was showing gives way, but only once the
+            // new one is in the group, and only if nothing would be lost.
+            if case .replacingTab = placement, let target, target !== window {
+                closeIfNothingWouldBeLost(target)
+            }
+
         case .newWindow:
             // An explicit request for a window is honoured even if the document
             // is already showing somewhere else.
             let controller = attachNewWindowController(to: document)
             controller.window?.makeKeyAndOrderFront(nil)
         }
+    }
+
+    /// Closes a tab that was only being looked at.
+    ///
+    /// A document with unsaved changes is never closed to make room for another
+    /// — the writer keeps both, and simply ends up with an extra tab. Neither is
+    /// a document still open in another window.
+    private static func closeIfNothingWouldBeLost(_ window: NSWindow) {
+        guard let controller = window.windowController as? DocumentWindowController else { return }
+        let document = controller.markdownDocument
+        guard document.windowControllers.count <= 1 else { return }
+
+        // An untitled document that has never been typed in is scaffolding, not
+        // work. AppKit keeps it because it is an autosaved draft; a writer just
+        // sees an empty tab that will not go away.
+        let isEmptyUntitled = document.fileURL == nil && document.textStorage.length == 0
+        if isEmptyUntitled {
+            document.close()
+            return
+        }
+
+        guard !document.isDocumentEdited else { return }
+        window.close()
     }
 
     private static func attachNewWindowController(
