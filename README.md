@@ -57,6 +57,18 @@ Green Screen is a dark room and green text, and nothing else: no scan lines, no
 bloom, no curvature, no flicker. Those would be decoration, and decoration is
 not writing.
 
+## The workspace
+
+A workspace is a folder and nothing more. Choose one and its Markdown and text
+files appear in the browser on the left, where you can navigate them entirely
+from the keyboard: `⌘1` moves focus there, arrow keys walk the tree, `↩` opens,
+and `Esc` hands focus back to the manuscript.
+
+There is no index, no database, no metadata and no tags. Delete Paragraph and
+you are left with exactly the folder you started with. It watches the folder,
+so files added, renamed or removed by Finder, another editor or iCloud Drive
+appear without a refresh.
+
 ## Markdown, shown but not hidden
 
 Emphasis is drawn as emphasis — **bold** is bold, *italic* is italic — while the
@@ -79,6 +91,17 @@ write to be identical.
 
 Emphasis is matched within a line, so a `**phrase spanning
 a soft line break**` is not styled.
+
+## Typewriter Mode
+
+Keeps the line you are writing near the middle of the window, so your eyes stay
+in one place instead of drifting to the bottom of the screen. `⌃⌘T`.
+
+![Typewriter Mode](Documentation/screenshots/typewriter-mode.png)
+
+It opens up room above the first line and below the last so they can reach the
+middle too, and it never fights a deliberate scroll: the view only moves when
+the insertion point does.
 
 ## Focus Mode
 
@@ -112,6 +135,18 @@ quotation mark on each paragraph of continued speech.
 It says nothing about the quality of the writing, and it never will.
 
 ---
+
+## Coming back
+
+Quit with a workspace open and a few chapters in tabs, and that is what you
+return to: the same windows at the same size, the same tabs in the same order,
+the right one in front, the browser open with the folders you had expanded, and
+each document roughly where you left the cursor.
+
+Restoration never takes priority over your files. A document that has moved or
+been deleted is named in a message offering to find it or drop it from the
+session — nothing is ever recreated to fill the gap. It can be turned off
+entirely in Settings, in which case every launch starts clean.
 
 ## Requirements
 
@@ -175,7 +210,7 @@ objects:
 xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Debug test
 ```
 
-Currently 101 package tests and 75 application tests, with no compiler warnings.
+Currently 101 package tests and 76 application tests, with no compiler warnings.
 
 ## Layout
 
@@ -302,6 +337,8 @@ Working and usable for real writing. Known gaps:
   single window it appears to be.
 - Closing every window and then quitting brings those windows back next launch.
   Losing an arrangement of tabs would be the worse trade.
+- Emphasis is matched within a line, so a phrase emphasised across a soft line
+  break is not styled.
 
 ## Licence
 

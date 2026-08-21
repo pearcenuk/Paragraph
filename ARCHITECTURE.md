@@ -105,6 +105,30 @@ existing document, placed beside the main editor and not participating in the
 tab group. Nothing in the current design assumes one editor per window; the
 two-windows-one-document tests already exercise the multi-view path.
 
+## Markdown styling
+
+Emphasis is drawn in the editor with its markers left in place. The scanner
+lives in `ParagraphKit` and returns spans over the source; the app maps those to
+font traits and colours.
+
+Two decisions make it safe and cheap:
+
+- **Attributes, not characters.** Styling is applied to the shared
+  `NSTextStorage` as attributes. A file is written from `textStorage.string`,
+  and the document's change count is only touched by `.editedCharacters`, so
+  restyling can neither alter a file nor enter the undo stack. This is the same
+  property that lets a theme change repaint the text without dirtying it.
+- **Line-scoped and deferred.** Emphasis is matched within a line, so an edit
+  only needs its own line restyled. That work runs on the next turn of the run
+  loop rather than inside the text storage's edit processing, where beginning a
+  further edit is not safe; edits arriving meanwhile are coalesced.
+
+Because the text view no longer sets `textColor` or `font` — either of which
+writes one value across the whole shared storage — the document owns storage
+attributes and the view owns only its own chrome. Focus Mode still layers on top
+through *temporary* attributes, which override colour without disturbing any of
+this.
+
 ## Word counting and Writing Check
 
 Both read a shared `ProseDocument`, which segments Markdown into prose runs once

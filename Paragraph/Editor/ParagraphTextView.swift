@@ -139,6 +139,10 @@ final class ParagraphTextView: NSTextView {
         if frame.width != available {
             setFrameSize(NSSize(width: available, height: frame.height))
         }
+        // The insets have just changed the height the text view needs. Without
+        // this the frame stays at its old size until something else triggers a
+        // relayout, and Typewriter Mode computes that it has no room to scroll.
+        sizeToFit()
     }
 
     // MARK: - Typewriter Mode
@@ -171,8 +175,14 @@ final class ParagraphTextView: NSTextView {
         let visibleHeight = scrollView.contentView.bounds.height
         guard visibleHeight > 0 else { return }
 
+        // Measure the laid-out text rather than trusting `frame.height`, which
+        // lags behind an inset change and would report no room to scroll.
+        layoutManager.ensureLayout(for: textContainer)
+        let contentHeight = layoutManager.usedRect(for: textContainer).height
+            + textContainerInset.height * 2
+
         let centreOfLine = lineRect.midY + textContainerOrigin.y
-        let maximum = max(0, frame.height - visibleHeight)
+        let maximum = max(0, contentHeight - visibleHeight)
         let target = min(max(0, centreOfLine - visibleHeight / 2), maximum)
 
         scrollView.contentView.scroll(to: NSPoint(x: scrollView.contentView.bounds.origin.x, y: target))

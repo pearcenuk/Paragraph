@@ -335,6 +335,42 @@ final class DocumentAndEditorTests: XCTestCase {
                              "the first and last lines must be able to reach the middle")
     }
 
+    /// The clamp on how far Typewriter Mode may scroll was derived from
+    /// `frame.height`, which lags behind an inset change — so it computed that
+    /// there was no room to scroll and quietly did nothing.
+    func testTypewriterModeBringsTheActiveLineToTheMiddle() throws {
+        let document = try makeDocument(String(repeating: "A line of prose.\n", count: 60))
+        let controller = DocumentWindowController(markdownDocument: document)
+        let editor = layOutEditor(controller, windowWidth: 1000, collapseSidebar: true)
+
+        editor.textView.typewriterModeEnabled = true
+        editor.textView.updateInsets()
+        editor.view.layoutSubtreeIfNeeded()
+
+        let length = document.textStorage.length
+        editor.textView.setSelectedRange(NSRange(location: max(0, length - 40), length: 0))
+        editor.textView.scrollCaretToTypewriterPosition()
+
+        let scrollView = try XCTUnwrap(editor.textView.enclosingScrollView)
+        let visible = scrollView.contentView.bounds
+        XCTAssertGreaterThan(visible.origin.y, 0, "Typewriter Mode did not scroll at all")
+
+        // The active line should end up near the middle of the viewport.
+        let layoutManager = try XCTUnwrap(editor.textView.layoutManager)
+        let container = try XCTUnwrap(editor.textView.textContainer)
+        let glyphs = layoutManager.glyphRange(
+            forCharacterRange: editor.textView.selectedRange(), actualCharacterRange: nil
+        )
+        let line = layoutManager.lineFragmentRect(
+            forGlyphAt: min(glyphs.location, layoutManager.numberOfGlyphs - 1), effectiveRange: nil
+        )
+        _ = container
+        let caretMid = line.midY + editor.textView.textContainerOrigin.y
+        let offsetFromCentre = abs(caretMid - visible.midY)
+        XCTAssertLessThan(offsetFromCentre, line.height * 2,
+                          "active line sits \(offsetFromCentre)pt from the middle")
+    }
+
     func testFocusModeDimsOnlyOutsideTheCurrentParagraph() throws {
         let markdown = "First paragraph.\nSecond paragraph.\nThird paragraph.\n"
         let document = try makeDocument(markdown)
