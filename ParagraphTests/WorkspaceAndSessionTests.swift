@@ -95,6 +95,36 @@ final class WorkspaceTests: XCTestCase {
         XCTAssertNil(Workspace(url: missing, startAccessing: false))
     }
 
+    // MARK: - Creating files
+
+    func testANewFileGetsAnExtensionParagraphCanReopen() {
+        // A bare name becomes Markdown, because that is what Paragraph is for.
+        XCTAssertEqual(Workspace.normalisedNewFileName("Chapter04"), "Chapter04.md")
+        XCTAssertEqual(Workspace.normalisedNewFileName("  Chapter04  "), "Chapter04.md")
+
+        // An extension it understands is kept exactly as typed.
+        XCTAssertEqual(Workspace.normalisedNewFileName("Notes.md"), "Notes.md")
+        XCTAssertEqual(Workspace.normalisedNewFileName("Notes.txt"), "Notes.txt")
+        XCTAssertEqual(Workspace.normalisedNewFileName("Notes.markdown"), "Notes.markdown")
+        XCTAssertEqual(Workspace.normalisedNewFileName("Notes.MD"), "Notes.MD")
+
+        // A full stop in a title is part of the title, not an extension —
+        // otherwise the file could not be reopened.
+        XCTAssertEqual(Workspace.normalisedNewFileName("Chapter 1.2"), "Chapter 1.2.md")
+        XCTAssertEqual(Workspace.normalisedNewFileName("Draft.pages"), "Draft.pages.md")
+    }
+
+    func testANewFileNameIsANameAndNeverAPath() {
+        // Nothing typed here may escape the folder that was right-clicked.
+        XCTAssertNil(Workspace.normalisedNewFileName("../Escape"))
+        XCTAssertNil(Workspace.normalisedNewFileName("Notes/Nested"))
+        XCTAssertNil(Workspace.normalisedNewFileName("/etc/passwd"))
+        XCTAssertNil(Workspace.normalisedNewFileName("."))
+        XCTAssertNil(Workspace.normalisedNewFileName(".."))
+        XCTAssertNil(Workspace.normalisedNewFileName(""))
+        XCTAssertNil(Workspace.normalisedNewFileName("   "))
+    }
+
     // MARK: - Switching workspace
 
     func testAWorkspaceKnowsWhatIsInsideIt() throws {

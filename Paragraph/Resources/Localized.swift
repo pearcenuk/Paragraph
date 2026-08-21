@@ -128,6 +128,18 @@ enum L10n {
     static let emptyWorkspace = String(localized: "This folder contains no Markdown or text files.", comment: "Empty state when a workspace has no supported files")
     static let workspaceUnavailable = String(localized: "This folder is not available at the moment.", comment: "Shown when a workspace folder cannot be reached")
 
+    static let contextNewFile = String(localized: "New File…", comment: "Workspace browser context menu")
+    static let newFileTitle = String(localized: "New File", comment: "Title of the sheet that names a new file")
+    static func newFileInFolder(_ folder: String) -> String {
+        String(localized: "Create a new file in “\(folder)”.", comment: "Explains where a new file will be created")
+    }
+    static let newFileButton = String(localized: "Create", comment: "Confirms creating a new file")
+    static let newFileDefaultName = String(localized: "Untitled", comment: "Default name for a new file, without its extension")
+    static func newFileExists(_ name: String) -> String {
+        String(localized: "“\(name)” already exists in this folder.", comment: "Alert when a new file would overwrite one")
+    }
+    static let newFileExistsDetail = String(localized: "Choose a different name.", comment: "Alert detail")
+
     static let contextRename = String(localized: "Rename…", comment: "Workspace browser context menu")
     static let contextRevealInFinder = String(localized: "Reveal in Finder", comment: "Workspace browser context menu")
     static let contextMoveToTrash = String(localized: "Move to Trash", comment: "Workspace browser context menu")

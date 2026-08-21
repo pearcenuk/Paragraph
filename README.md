@@ -96,6 +96,10 @@ A workspace is a folder and nothing more. Choose one and its Markdown and text f
 
 Double-clicking opens a file **in the tab you are already looking at**, the way an editor does. The tab it replaces is closed only if it holds nothing unsaved. Opening an *additional* tab is deliberate: middle-click, `⌥↩`, or the contextual menu.
 
+Right-click a folder and choose **New File…** to start a chapter where you
+want it — inside that folder, or alongside the file you clicked. A bare name
+gets `.md`, and the new file opens straight away, empty.
+
 There is no index, no metadata and no tags. It watches the folder, so files added, renamed or removed by Finder, another editor or iCloud Drive appear without a refresh. Choosing a different folder closes the old folder's documents, so the browser and the editor never disagree about where you are — asking first about anything unsaved.
 
 ## Markdown, shown but not hidden
@@ -208,7 +212,7 @@ Application behaviour is tested against the real objects:
 xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Debug test
 ```
 
-Currently 101 package tests and 79 application tests, with no compiler warnings.
+Currently 101 package tests and 81 application tests, with no compiler warnings.
 
 ### Why macOS 13
 

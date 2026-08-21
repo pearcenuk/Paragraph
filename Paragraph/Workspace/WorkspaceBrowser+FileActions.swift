@@ -11,6 +11,9 @@ extension WorkspaceBrowserViewController {
     func makeContextMenu() -> NSMenu {
         let menu = NSMenu()
         menu.delegate = self
+        menu.addItem(withTitle: L10n.contextNewFile,
+                     action: #selector(contextNewFile), keyEquivalent: "")
+        menu.addItem(.separator())
         menu.addItem(withTitle: L10n.commandOpenSelected,
                      action: #selector(contextOpen), keyEquivalent: "")
         menu.addItem(withTitle: L10n.commandOpenInNewTab,
@@ -36,6 +39,85 @@ extension WorkspaceBrowserViewController {
         let row = outlineView.clickedRow
         guard row >= 0 else { return selectedItem }
         return outlineView.item(atRow: row) as? WorkspaceItem
+    }
+
+    /// Creates a file beside what was right-clicked.
+    ///
+    /// Right-clicking a folder puts the file inside it; right-clicking a file
+    /// puts it alongside; right-clicking nothing puts it at the top of the
+    /// workspace. That is where a writer means, in each case.
+    @objc private func contextNewFile() {
+        guard let workspace, let window = view.window else { return }
+        let folder = destinationFolder(for: contextItem, in: workspace)
+
+        let alert = NSAlert()
+        alert.messageText = L10n.newFileTitle
+        alert.informativeText = L10n.newFileInFolder(folder.lastPathComponent)
+        alert.addButton(withTitle: L10n.newFileButton)
+        alert.addButton(withTitle: L10n.cancel)
+
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 260, height: 24))
+        field.stringValue = L10n.newFileDefaultName
+        alert.accessoryView = field
+        alert.window.initialFirstResponder = field
+
+        alert.beginSheetModal(for: window) { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.createFile(named: field.stringValue, in: folder)
+        }
+    }
+
+    private func destinationFolder(for item: WorkspaceItem?, in workspace: Workspace) -> URL {
+        guard let item else { return workspace.rootURL }
+        return item.isDirectory ? item.url : item.url.deletingLastPathComponent()
+    }
+
+    private func createFile(named typed: String, in folder: URL) {
+        guard let name = Workspace.normalisedNewFileName(typed) else { return }
+        let destination = folder.appendingPathComponent(name)
+
+        guard !FileManager.default.fileExists(atPath: destination.path) else {
+            presentExistingFile(named: name)
+            return
+        }
+
+        var coordinationError: NSError?
+        var writeError: Error?
+        NSFileCoordinator().coordinate(
+            writingItemAt: destination, options: .forReplacing, error: &coordinationError
+        ) { url in
+            do {
+                // Empty, not a template. A blank page is the point.
+                try Data().write(to: url, options: .withoutOverwriting)
+            } catch {
+                writeError = error
+            }
+        }
+        if let error = writeError ?? coordinationError {
+            presentFileError(error)
+            return
+        }
+
+        workspace?.refresh()
+        // The scan publishes on the main queue, so wait for the row to exist
+        // before selecting it and handing the writer a cursor.
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.selectItem(at: destination)
+            self.delegate?.workspaceBrowser(
+                self, open: destination, placement: .replacingTab(self.view.window)
+            )
+        }
+    }
+
+    private func presentExistingFile(named name: String) {
+        guard let window = view.window else { return }
+        let alert = NSAlert()
+        alert.messageText = L10n.newFileExists(name)
+        alert.informativeText = L10n.newFileExistsDetail
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: L10n.ok)
+        alert.beginSheetModal(for: window, completionHandler: nil)
     }
 
     @objc private func contextOpen() {
@@ -158,6 +240,8 @@ extension WorkspaceBrowserViewController: NSMenuDelegate {
 
         for menuItem in menu.items where !menuItem.isSeparatorItem {
             switch menuItem.title {
+            case L10n.contextNewFile:
+                menuItem.isEnabled = workspace != nil
             case L10n.commandOpenSelected, L10n.commandOpenInNewTab, L10n.commandOpenInNewWindow:
                 menuItem.isEnabled = isFile
             default:

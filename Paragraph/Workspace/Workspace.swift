@@ -185,6 +185,23 @@ final class Workspace: ObservableObject {
     /// All openable files, used by Quick Open. Never leaves the workspace.
     var allFiles: [WorkspaceItem] { rootItems.flatMap(\.allFiles) }
 
+    /// Turns what the writer typed into a filename Paragraph can open.
+    ///
+    /// A bare name gets `.md`, because that is what Paragraph is for. An
+    /// extension the application understands is kept as typed; anything else is
+    /// treated as part of the name, so `Chapter 1.2` becomes `Chapter 1.2.md`
+    /// rather than a file Paragraph cannot reopen.
+    static func normalisedNewFileName(_ typed: String) -> String? {
+        let trimmed = typed.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        // A name is a name, never a path.
+        guard !trimmed.contains("/"), trimmed != ".", trimmed != ".." else { return nil }
+
+        let suffix = (trimmed as NSString).pathExtension.lowercased()
+        if !suffix.isEmpty, supportedExtensions.contains(suffix) { return trimmed }
+        return trimmed + ".md"
+    }
+
     /// Whether `url` lives inside this workspace.
     func contains(_ url: URL) -> Bool {
         let root = rootURL.standardizedFileURL.resolvingSymlinksInPath().path
