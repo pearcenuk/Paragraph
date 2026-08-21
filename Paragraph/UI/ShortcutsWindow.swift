@@ -62,6 +62,7 @@ struct ShortcutsView: View {
 
 final class ShortcutsWindowController: NSWindowController {
     static let shared = ShortcutsWindowController()
+    private var appearance: ThemeAppearanceBinder?
 
     private init() {
         let window = NSWindow(
@@ -75,6 +76,7 @@ final class ShortcutsWindowController: NSWindowController {
         window.isRestorable = false
         window.contentView = NSHostingView(rootView: ShortcutsView())
         super.init(window: window)
+        appearance = ThemeAppearanceBinder(window: window)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }

@@ -120,6 +120,7 @@ final class WritingCheckWindowController: NSWindowController {
     static let shared = WritingCheckWindowController()
 
     private let model = WritingCheckModel()
+    private var appearance: ThemeAppearanceBinder?
     private weak var targetEditor: EditorViewController?
 
     private init() {
@@ -139,6 +140,7 @@ final class WritingCheckWindowController: NSWindowController {
                 self?.reveal(issue)
             }
         )
+        appearance = ThemeAppearanceBinder(window: window)
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) is not used") }

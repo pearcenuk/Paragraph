@@ -44,6 +44,7 @@ struct SettingsView: View {
 
 final class SettingsWindowController: NSWindowController {
     static let shared = SettingsWindowController()
+    private var appearance: ThemeAppearanceBinder?
 
     private init() {
         let window = NSWindow(
@@ -57,6 +58,7 @@ final class SettingsWindowController: NSWindowController {
         window.isRestorable = false
         window.contentView = NSHostingView(rootView: SettingsView())
         super.init(window: window)
+        appearance = ThemeAppearanceBinder(window: window)
         window.center()
     }
 

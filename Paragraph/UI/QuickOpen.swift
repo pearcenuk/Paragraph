@@ -140,6 +140,11 @@ struct QuickOpenView: View {
                 .padding(.vertical, 6)
         }
         .background(Color(nsColor: theme.editorBackground))
+        // The panel floats over the manuscript in the same colours, so it needs
+        // an edge or it reads as a hole in the text.
+        .overlay(
+            Rectangle().strokeBorder(Color(nsColor: theme.separator), lineWidth: 1)
+        )
     }
 }
 
@@ -180,6 +185,7 @@ final class QuickOpenPanelController: NSObject {
     private var panel: NSPanel?
     private var keyMonitor: Any?
     private let model = QuickOpenModel()
+    private var appearance: ThemeAppearanceBinder?
 
     private override init() { super.init() }
 
@@ -188,6 +194,16 @@ final class QuickOpenPanelController: NSObject {
 
         if panel == nil { panel = makePanel() }
         guard let panel else { return }
+
+        // The panel outlives a theme change, so refresh what it draws with.
+        panel.backgroundColor = Preferences.shared.currentTheme.editorBackground
+        if let hosting = panel.contentView as? NSHostingView<QuickOpenView> {
+            hosting.rootView = QuickOpenView(
+                model: model,
+                theme: Preferences.shared.currentTheme,
+                onOpen: { [weak self] item, placement in self?.open(item, placement: placement) }
+            )
+        }
 
         position(panel, relativeTo: parent)
         panel.makeKeyAndOrderFront(nil)
@@ -218,23 +234,39 @@ final class QuickOpenPanelController: NSObject {
         panel.titlebarAppearsTransparent = true
         panel.isMovableByWindowBackground = true
         panel.level = .floating
+        // Without this the panel is translucent and the manuscript reads
+        // straight through the file list.
+        panel.isOpaque = true
+        panel.backgroundColor = Preferences.shared.currentTheme.editorBackground
+        panel.hasShadow = true
         panel.isReleasedWhenClosed = false
         panel.delegate = self
         // Not `hidesOnDeactivate`: that only hides the panel and brings it back
         // when the writer returns to Paragraph, which is not what dismissing
         // something means. Losing focus dismisses it outright instead.
         panel.contentView = hosting
-        panel.appearance = Preferences.shared.currentTheme.appearance
+        appearance = ThemeAppearanceBinder(window: panel)
         return panel
     }
 
+    /// Sits over the window the writer is working in, not in the middle of the
+    /// display. On a wide screen those are not the same place.
     private func position(_ panel: NSPanel, relativeTo parent: NSWindow?) {
-        let screenFrame = (parent?.screen ?? NSScreen.main)?.visibleFrame ?? .zero
         let size = NSSize(width: 560, height: 380)
-        let origin = NSPoint(
-            x: screenFrame.midX - size.width / 2,
-            y: screenFrame.midY - size.height / 2 + screenFrame.height * 0.15
+        let reference = parent?.frame
+            ?? (parent?.screen ?? NSScreen.main)?.visibleFrame
+            ?? .zero
+
+        var origin = NSPoint(
+            x: reference.midX - size.width / 2,
+            y: reference.midY - size.height / 2 + reference.height * 0.12
         )
+
+        // Keep it fully on the screen it lands on.
+        if let visible = (parent?.screen ?? NSScreen.main)?.visibleFrame {
+            origin.x = min(max(origin.x, visible.minX + 8), visible.maxX - size.width - 8)
+            origin.y = min(max(origin.y, visible.minY + 8), visible.maxY - size.height - 8)
+        }
         panel.setFrame(NSRect(origin: origin, size: size), display: true)
     }
 
