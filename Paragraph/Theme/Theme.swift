@@ -37,6 +37,12 @@ struct Theme {
 
     var appearance: NSAppearance? { NSAppearance(named: appearanceName) }
 
+    /// Markdown punctuation: visible, but receding so the prose reads first.
+    var markerText: NSColor { secondaryText }
+
+    /// Inline code and fenced blocks.
+    var codeText: NSColor { secondaryText }
+
     static func theme(for identifier: ThemeIdentifier) -> Theme {
         switch identifier {
         case .light:

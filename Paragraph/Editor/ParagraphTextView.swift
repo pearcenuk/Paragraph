@@ -106,13 +106,14 @@ final class ParagraphTextView: NSTextView {
     private func applyTheme() {
         backgroundColor = theme.editorBackground
         insertionPointColor = theme.insertionPoint
-        textColor = theme.bodyText
-        font = EditorTypography.bodyFont()
         selectedTextAttributes = [
-            .backgroundColor: theme.selectionBackground,
-            .foregroundColor: theme.bodyText
+            .backgroundColor: theme.selectionBackground
         ]
         typingAttributes = MarkdownDocument.attributes(for: theme)
+        // Deliberately not `textColor` or `font`: both write one value across
+        // the whole shared storage, which would flatten the Markdown styling the
+        // document has just applied. The document owns storage attributes; the
+        // text view owns only its own chrome.
         updateFocusHighlight()
         needsDisplay = true
     }

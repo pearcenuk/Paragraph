@@ -21,6 +21,8 @@ belong in Paragraph.**
 - Puts the manuscript in a centred, left-aligned writing column with a fixed,
   comfortable measure
 - Sets prose in IBM Plex Sans, at a size you change with `⌘+` and `⌘-`
+- Draws bold and italic as bold and italic, with the Markdown markers left in
+  place — no preview, nothing hidden
 - Uses the system's own spell checking, and shows no other analysis while you
   type
 - Shows the current document's word count, and nothing else
@@ -54,6 +56,29 @@ present.
 Green Screen is a dark room and green text, and nothing else: no scan lines, no
 bloom, no curvature, no flicker. Those would be decoration, and decoration is
 not writing.
+
+## Markdown, shown but not hidden
+
+Emphasis is drawn as emphasis — **bold** is bold, *italic* is italic — while the
+markers stay exactly where you typed them, dimmed. This is not a preview and
+not a hidden-Markdown editor: nothing moves, appears or disappears as the
+cursor travels over it, and the source on screen is still the source on disk.
+
+![Markdown styling](Documentation/screenshots/markdown-styling.png)
+
+The scanner is deliberately cautious, because a wrongly bolded half-paragraph
+is far more irritating than a missed italic. `some_file_name_here` stays
+upright, `2 * 3 * 4` is arithmetic, `\*escaped\*` is literal, and nothing
+inside a code span or fenced block is touched.
+
+Styling is applied as text *attributes*, never as characters. Only the plain
+string is written to disk, and only a change to the characters marks a document
+edited — so this cannot alter a file and never enters the undo stack. The test
+suite checks exactly that: style a document, then require the bytes it would
+write to be identical.
+
+Emphasis is matched within a line, so a `**phrase spanning
+a soft line break**` is not styled.
 
 ## Focus Mode
 
@@ -150,7 +175,7 @@ objects:
 xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Debug test
 ```
 
-Currently 80 package tests and 73 application tests, with no compiler warnings.
+Currently 101 package tests and 75 application tests, with no compiler warnings.
 
 ## Layout
 

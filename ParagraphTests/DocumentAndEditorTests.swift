@@ -80,6 +80,51 @@ final class DocumentAndEditorTests: XCTestCase {
         cancellable.cancel()
     }
 
+    // MARK: - Markdown styling
+
+    /// The whole safety argument for styling: it is attributes, not characters.
+    func testMarkdownStylingIsAppliedButNeverReachesTheFile() throws {
+        let source = "# Title\n\nShe was *quite* **certain**, and `code` too.\n"
+        let document = try makeDocument(source)
+        document.applyDisplayAttributes(theme: ThemeIdentifier.light.theme)
+
+        let whole = NSRange(location: 0, length: document.textStorage.length)
+        var sawBold = false
+        var sawItalic = false
+        document.textStorage.enumerateAttribute(.font, in: whole) { value, _, _ in
+            guard let font = value as? NSFont else { return }
+            let traits = font.fontDescriptor.symbolicTraits
+            if traits.contains(.bold) { sawBold = true }
+            if traits.contains(.italic) { sawItalic = true }
+        }
+        XCTAssertTrue(sawBold, "**certain** was not drawn bold")
+        XCTAssertTrue(sawItalic, "*quite* was not drawn italic")
+
+        // The markers are still in the text, exactly where they were typed.
+        XCTAssertEqual(document.textStorage.string, source)
+
+        // And none of it counts as an edit, or reaches the file.
+        XCTAssertFalse(document.isDocumentEdited,
+                       "styling must not mark the document edited")
+        let data = try document.data(ofType: "net.daringfireball.markdown")
+        XCTAssertEqual(String(data: data, encoding: .utf8), source,
+                       "styling must not change a single byte")
+    }
+
+    func testStylingSurvivesAThemeChange() throws {
+        let document = try makeDocument("A **bold** word.\n")
+        for identifier in ThemeIdentifier.allCases {
+            document.applyDisplayAttributes(theme: identifier.theme)
+            let whole = NSRange(location: 0, length: document.textStorage.length)
+            var sawBold = false
+            document.textStorage.enumerateAttribute(.font, in: whole) { value, _, _ in
+                if let font = value as? NSFont,
+                   font.fontDescriptor.symbolicTraits.contains(.bold) { sawBold = true }
+            }
+            XCTAssertTrue(sawBold, "\(identifier) lost the styling")
+        }
+    }
+
     // MARK: - One file, one document
 
     func testTwoWindowsShareOneTextStorageAndOneUndoStack() throws {

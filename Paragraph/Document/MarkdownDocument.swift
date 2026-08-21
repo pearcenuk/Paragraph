@@ -38,6 +38,8 @@ final class MarkdownDocument: NSDocument, ObservableObject {
     private var isLoading = false
     private var isApplyingDisplayAttributes = false
     private var wordCountWork: DispatchWorkItem?
+    private var pendingRestyle: NSRange?
+    private var isRestyleScheduled = false
     private var themeObserver: AnyCancellable?
 
     // MARK: - Lifecycle
@@ -155,20 +157,43 @@ final class MarkdownDocument: NSDocument, ObservableObject {
 
     // MARK: - Display attributes
 
-    /// Applies the font, measure and theme colours to the whole storage.
+    /// Applies the font, measure, theme colours and Markdown styling.
     ///
-    /// These are display attributes only. They are re-applied when the theme
-    /// changes and are deliberately excluded from the document's change count,
-    /// because changing how text looks is not an edit to the text.
+    /// These are display attributes only. Attributes are not characters: the
+    /// file is written from `textStorage.string`, and only a change to the
+    /// characters marks the document edited. Restyling therefore cannot alter a
+    /// file and does not appear in the undo stack.
     func applyDisplayAttributes(theme: Theme) {
         guard textStorage.length > 0 || !isLoading else { return }
+        restyle(range: nil, theme: theme)
+    }
+
+    /// Redraws Markdown styling over `range`, or the whole document for `nil`.
+    private func restyle(range: NSRange?, theme: Theme? = nil) {
         isApplyingDisplayAttributes = true
         defer { isApplyingDisplayAttributes = false }
+        MarkdownStyler.apply(
+            to: textStorage,
+            theme: theme ?? Preferences.shared.currentTheme,
+            range: range
+        )
+    }
 
-        let range = NSRange(location: 0, length: textStorage.length)
-        textStorage.beginEditing()
-        textStorage.setAttributes(Self.attributes(for: theme), range: range)
-        textStorage.endEditing()
+    /// Restyling runs on the next turn of the run loop rather than inside the
+    /// text storage's own edit processing, where beginning a further edit is
+    /// not safe. Edits that arrive in the meantime are coalesced.
+    private func scheduleRestyle(around edited: NSRange) {
+        pendingRestyle = pendingRestyle.map { NSUnionRange($0, edited) } ?? edited
+        guard !isRestyleScheduled else { return }
+        isRestyleScheduled = true
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.isRestyleScheduled = false
+            let range = self.pendingRestyle
+            self.pendingRestyle = nil
+            self.restyle(range: range)
+        }
     }
 
     static func attributes(for theme: Theme) -> [NSAttributedString.Key: Any] {
@@ -225,5 +250,6 @@ extension MarkdownDocument: NSTextStorageDelegate {
 
         updateChangeCount(.changeDone)
         recalculateWordCount()
+        scheduleRestyle(around: editedRange)
     }
 }
