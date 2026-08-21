@@ -29,9 +29,11 @@ struct Theme {
     /// Word-count bar and other quiet chrome.
     let secondaryText: NSColor
     let separator: NSColor
-    /// `nil` means "use the system sidebar material", which is what Light and
-    /// Dark do so the window looks like every other Mac window.
-    let sidebarBackground: NSColor?
+    /// The browser's background. Every theme supplies one rather than using the
+    /// system's translucent sidebar material: that material samples the desktop
+    /// behind the window, so a coloured wallpaper tinted the file list and the
+    /// theme stopped being the thing deciding what the writer sees.
+    let sidebarBackground: NSColor
 
     var appearance: NSAppearance? { NSAppearance(named: appearanceName) }
 
@@ -48,7 +50,7 @@ struct Theme {
                 selectionBackground: NSColor(calibratedRed: 0.78, green: 0.84, blue: 0.93, alpha: 1),
                 secondaryText: NSColor(white: 0.45, alpha: 1),
                 separator: NSColor(white: 0.88, alpha: 1),
-                sidebarBackground: nil
+                sidebarBackground: NSColor(white: 0.955, alpha: 1)
             )
 
         case .dark:
@@ -62,7 +64,7 @@ struct Theme {
                 selectionBackground: NSColor(calibratedRed: 0.22, green: 0.28, blue: 0.36, alpha: 1),
                 secondaryText: NSColor(white: 0.58, alpha: 1),
                 separator: NSColor(white: 0.24, alpha: 1),
-                sidebarBackground: nil
+                sidebarBackground: NSColor(white: 0.105, alpha: 1)
             )
 
         case .greenScreen:
@@ -73,13 +75,13 @@ struct Theme {
                 identifier: .greenScreen,
                 appearanceName: .darkAqua,
                 editorBackground: NSColor(srgbRed: 0.039, green: 0.055, blue: 0.039, alpha: 1),
-                bodyText: NSColor(srgbRed: 0.561, green: 0.761, blue: 0.561, alpha: 1),
-                deEmphasisedText: NSColor(srgbRed: 0.290, green: 0.420, blue: 0.290, alpha: 1),
-                insertionPoint: NSColor(srgbRed: 0.659, green: 0.878, blue: 0.659, alpha: 1),
-                selectionBackground: NSColor(srgbRed: 0.118, green: 0.227, blue: 0.118, alpha: 1),
-                secondaryText: NSColor(srgbRed: 0.400, green: 0.549, blue: 0.400, alpha: 1),
-                separator: NSColor(srgbRed: 0.106, green: 0.153, blue: 0.106, alpha: 1),
-                sidebarBackground: NSColor(srgbRed: 0.027, green: 0.039, blue: 0.027, alpha: 1)
+                bodyText: NSColor(srgbRed: 0.600, green: 0.870, blue: 0.600, alpha: 1),
+                deEmphasisedText: NSColor(srgbRed: 0.310, green: 0.450, blue: 0.310, alpha: 1),
+                insertionPoint: NSColor(srgbRed: 0.706, green: 0.949, blue: 0.706, alpha: 1),
+                selectionBackground: NSColor(srgbRed: 0.129, green: 0.259, blue: 0.129, alpha: 1),
+                secondaryText: NSColor(srgbRed: 0.435, green: 0.612, blue: 0.435, alpha: 1),
+                separator: NSColor(srgbRed: 0.176, green: 0.271, blue: 0.176, alpha: 1),
+                sidebarBackground: NSColor(srgbRed: 0.020, green: 0.031, blue: 0.020, alpha: 1)
             )
         }
     }

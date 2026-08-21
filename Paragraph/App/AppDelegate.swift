@@ -193,12 +193,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         Preferences.shared.focusMode.toggle()
     }
 
+    /// Runs the check and shows the results. There is no separate command to
+    /// reopen them: running again is instant and always current.
     @IBAction func runWritingCheck(_ sender: Any?) {
         WritingCheckWindowController.shared.run(on: frontmostDocumentWindowController)
-    }
-
-    @IBAction func showWritingCheckResults(_ sender: Any?) {
-        WritingCheckWindowController.shared.showResults()
     }
 
     // MARK: - Help and Settings

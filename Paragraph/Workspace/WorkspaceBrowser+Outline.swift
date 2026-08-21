@@ -50,17 +50,23 @@ extension WorkspaceBrowserViewController: NSOutlineViewDelegate {
         cell.textField?.stringValue = item.name
         cell.imageView?.image = icon(for: item)
 
+        // The browser follows the theme rather than the system label colours,
+        // which would leave Green Screen listing files in white beside a green
+        // manuscript.
+        let theme = Preferences.shared.currentTheme
+        cell.imageView?.contentTintColor = theme.secondaryText
+
         // Availability is never signalled by colour alone: an unavailable item
         // gets a different symbol and an accessibility description.
         switch item.cloudStatus {
         case .local:
-            cell.textField?.textColor = .labelColor
+            cell.textField?.textColor = theme.bodyText
             cell.setAccessibilityLabel(item.name)
         case .downloading:
-            cell.textField?.textColor = .secondaryLabelColor
+            cell.textField?.textColor = theme.secondaryText
             cell.setAccessibilityLabel("\(item.name), \(L10n.itemDownloading)")
         case .notDownloaded:
-            cell.textField?.textColor = .secondaryLabelColor
+            cell.textField?.textColor = theme.secondaryText
             cell.setAccessibilityLabel("\(item.name), \(L10n.itemNotDownloaded)")
         }
         return cell

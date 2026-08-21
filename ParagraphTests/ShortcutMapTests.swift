@@ -108,7 +108,7 @@ final class ShortcutMapTests: XCTestCase {
             .toggleWorkspaceBrowser, .moveFocusToWorkspaceBrowser, .moveFocusToEditor,
             .quickOpen, .openInTab, .openInNewWindow, .showNextTab, .showPreviousTab,
             .closeTab, .reopenClosedTab, .toggleTypewriterMode, .toggleFocusMode,
-            .toggleWordCount, .runWritingCheck, .showWritingCheckResults, .keyboardShortcuts
+            .toggleWordCount, .runWritingCheck, .keyboardShortcuts
         ]
         for command in required {
             XCTAssertNotNil(command.shortcut, "\(command) should have a fixed shortcut")

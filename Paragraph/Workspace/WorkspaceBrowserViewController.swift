@@ -98,14 +98,9 @@ final class WorkspaceBrowserViewController: NSViewController {
 
     private func applyTheme(_ theme: Theme) {
         guard isViewLoaded else { return }
-        if let background = theme.sidebarBackground {
-            scrollView.drawsBackground = true
-            scrollView.backgroundColor = background
-            outlineView.backgroundColor = background
-        } else {
-            scrollView.drawsBackground = false
-            outlineView.backgroundColor = .clear
-        }
+        scrollView.drawsBackground = true
+        scrollView.backgroundColor = theme.sidebarBackground
+        outlineView.backgroundColor = theme.sidebarBackground
         view.appearance = theme.appearance
         outlineView.reloadData()
         restoreExpandedFolders()
@@ -171,7 +166,7 @@ final class WorkspaceBrowserViewController: NSViewController {
         let label = NSTextField(labelWithString: message)
         label.alignment = .center
         label.font = .systemFont(ofSize: 11)
-        label.textColor = .secondaryLabelColor
+        label.textColor = Preferences.shared.currentTheme.secondaryText
         label.lineBreakMode = .byWordWrapping
         label.maximumNumberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false

@@ -82,6 +82,37 @@ final class ThemeTests: XCTestCase {
         XCTAssertLessThan(text.greenComponent, 0.9, "green is not muted")
     }
 
+    /// The sidebar's material is drawn by the window. Setting the appearance
+    /// only on descendant views left Light drawing black text on the system's
+    /// dark sidebar material.
+    func testTheWindowItselfCarriesTheThemeAppearance() throws {
+        let document = MarkdownDocument()
+        let controller = DocumentWindowController(markdownDocument: document)
+        _ = controller.window
+
+        for identifier in ThemeIdentifier.allCases {
+            let original = Preferences.shared.theme
+            defer { Preferences.shared.theme = original }
+
+            Preferences.shared.theme = identifier
+            // The theme reaches the window through a main-run-loop sink.
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+            XCTAssertEqual(controller.window?.appearance?.name, identifier.theme.appearanceName,
+                           "\(identifier) does not reach the window")
+        }
+    }
+
+    func testTheDividerIsVisibleAgainstBothSides() {
+        // Green Screen has near-black on both sides of the split, where AppKit's
+        // own divider disappears.
+        for identifier in ThemeIdentifier.allCases {
+            let theme = identifier.theme
+            let againstEditor = contrast(theme.separator, theme.editorBackground)
+            XCTAssertGreaterThan(againstEditor, 1.2,
+                "\(identifier) divider is invisible against the manuscript")
+        }
+    }
+
     func testThereAreExactlyThreeThemes() {
         XCTAssertEqual(ThemeIdentifier.allCases.count, 3)
     }

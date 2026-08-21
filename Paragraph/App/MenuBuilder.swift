@@ -210,7 +210,6 @@ enum MenuBuilder {
         add(.toggleFocusMode, to: menu)
         menu.addItem(.separator())
         add(.runWritingCheck, to: menu)
-        add(.showWritingCheckResults, to: menu)
         return menu
     }
 

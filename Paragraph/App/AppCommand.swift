@@ -107,7 +107,6 @@ enum AppCommand: String, CaseIterable {
     case toggleFocusMode
     case toggleSpellChecking
     case runWritingCheck
-    case showWritingCheckResults
 
     // Help
     case keyboardShortcuts
@@ -143,7 +142,6 @@ enum AppCommand: String, CaseIterable {
         case .toggleFocusMode: return L10n.commandFocusMode
         case .toggleSpellChecking: return L10n.commandCheckSpellingWhileTyping
         case .runWritingCheck: return L10n.commandRunWritingCheck
-        case .showWritingCheckResults: return L10n.commandShowWritingCheckResults
 
         case .keyboardShortcuts: return L10n.commandKeyboardShortcuts
         }
@@ -178,7 +176,6 @@ enum AppCommand: String, CaseIterable {
         case .toggleFocusMode: return #selector(AppDelegate.toggleFocusMode(_:))
         case .toggleSpellChecking: return #selector(NSTextView.toggleContinuousSpellChecking(_:))
         case .runWritingCheck: return #selector(AppDelegate.runWritingCheck(_:))
-        case .showWritingCheckResults: return #selector(AppDelegate.showWritingCheckResults(_:))
 
         case .keyboardShortcuts: return #selector(AppDelegate.showKeyboardShortcuts(_:))
         }
@@ -214,7 +211,6 @@ enum AppCommand: String, CaseIterable {
         case .toggleTypewriterMode: return Shortcut("t", [.command, .control])
         case .toggleFocusMode: return Shortcut("p", [.command, .control])
         case .runWritingCheck: return Shortcut("r", [.command, .control])
-        case .showWritingCheckResults: return Shortcut("y", [.command, .control])
 
         case .keyboardShortcuts: return Shortcut("/")
         }
@@ -233,7 +229,7 @@ enum AppCommand: String, CaseIterable {
              .reopenClosedTab:
             return .navigate
         case .toggleTypewriterMode, .toggleFocusMode, .toggleSpellChecking,
-             .runWritingCheck, .showWritingCheckResults:
+             .runWritingCheck:
             return .writing
         case .keyboardShortcuts:
             return .help

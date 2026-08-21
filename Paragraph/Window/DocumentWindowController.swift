@@ -62,6 +62,11 @@ final class DocumentWindowController: NSWindowController {
         contentItem.minimumThickness = 320
 
         splitViewController = NSSplitViewController()
+        // The stock divider is invisible when both sides are near-black, as they
+        // are in Green Screen. A themed one keeps the boundary readable.
+        splitViewController.splitView = ParagraphSplitView()
+        splitViewController.splitView.isVertical = true
+        splitViewController.splitView.dividerStyle = .thin
         splitViewController.addSplitViewItem(sidebarItem)
         splitViewController.addSplitViewItem(contentItem)
         // Lets macOS remember how wide the writer dragged the browser.
@@ -80,6 +85,15 @@ final class DocumentWindowController: NSWindowController {
         // there is no workspace the browser shows its "Choose Folder…" empty
         // state, which is the most useful thing a new writer can be shown.
         // Session restoration sets this per window afterwards.
+
+        // The sidebar's material belongs to the window, not to the browser's
+        // view. Setting the appearance only on descendants left a Light theme
+        // drawing black text on the system's dark sidebar material.
+        applyTheme(Preferences.shared.currentTheme)
+        Preferences.shared.$theme
+            .receive(on: RunLoop.main)
+            .sink { [weak self] identifier in self?.applyTheme(identifier.theme) }
+            .store(in: &observers)
 
         WorkspaceController.shared.$workspace
             .receive(on: RunLoop.main)
@@ -100,6 +114,11 @@ final class DocumentWindowController: NSWindowController {
         toolbar.displayMode = .iconOnly
         toolbar.allowsUserCustomization = false
         return toolbar
+    }
+
+    private func applyTheme(_ theme: Theme) {
+        window?.appearance = theme.appearance
+        splitViewController.splitView.needsDisplay = true
     }
 
     override func windowTitle(forDocumentDisplayName displayName: String) -> String {

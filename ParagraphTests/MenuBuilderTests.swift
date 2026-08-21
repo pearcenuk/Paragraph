@@ -73,6 +73,14 @@ final class MenuBuilderTests: XCTestCase {
         }
     }
 
+    func testWritingCheckIsASingleCommand() {
+        // Running the check always shows current results, so a second command to
+        // reopen stale ones only added a control.
+        let writing = mainMenu.items.first { $0.submenu?.title == L10n.menuWriting }?.submenu
+        let checkItems = writing?.items.filter { $0.title.contains(L10n.writingCheckTitle) } ?? []
+        XCTAssertEqual(checkItems.count, 1, "there should be exactly one Writing Check command")
+    }
+
     func testSpellCheckingIsWhereMacUsersExpectIt() {
         let edit = mainMenu.items.first { $0.submenu?.title == L10n.menuEdit }?.submenu
         let spelling = edit?.items.first { $0.submenu?.title == L10n.commandSpelling }?.submenu

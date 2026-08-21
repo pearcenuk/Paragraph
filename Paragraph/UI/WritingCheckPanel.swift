@@ -173,10 +173,6 @@ final class WritingCheckWindowController: NSWindowController {
         window?.title = "\(L10n.writingCheckTitle) — \(name)"
     }
 
-    func showResults() {
-        showWindow(nil)
-    }
-
     private func reveal(_ issue: PresentedIssue) {
         guard let editor = targetEditor else { return }
         editor.view.window?.makeKeyAndOrderFront(nil)
