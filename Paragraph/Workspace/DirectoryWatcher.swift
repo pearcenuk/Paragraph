@@ -9,7 +9,7 @@ final class DirectoryWatcher {
     private let url: URL
     private let onChange: () -> Void
     private var stream: FSEventStreamRef?
-    private let queue = DispatchQueue(label: "com.example.paragraph.directory-watcher")
+    private let queue = DispatchQueue(label: "me.npearce.Paragraph.directory-watcher")
 
     /// Changes arrive in bursts while a folder syncs; coalesce them.
     private let latency: CFTimeInterval = 0.5
