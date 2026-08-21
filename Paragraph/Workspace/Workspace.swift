@@ -185,6 +185,13 @@ final class Workspace: ObservableObject {
     /// All openable files, used by Quick Open. Never leaves the workspace.
     var allFiles: [WorkspaceItem] { rootItems.flatMap(\.allFiles) }
 
+    /// Whether `url` lives inside this workspace.
+    func contains(_ url: URL) -> Bool {
+        let root = rootURL.standardizedFileURL.resolvingSymlinksInPath().path
+        let candidate = url.standardizedFileURL.resolvingSymlinksInPath().path
+        return candidate == root || candidate.hasPrefix(root.hasSuffix("/") ? root : root + "/")
+    }
+
     func item(at url: URL) -> WorkspaceItem? {
         allFiles.first { $0.url.standardizedFileURL == url.standardizedFileURL }
     }

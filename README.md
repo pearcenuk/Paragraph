@@ -69,6 +69,13 @@ you are left with exactly the folder you started with. It watches the folder,
 so files added, renamed or removed by Finder, another editor or iCloud Drive
 appear without a refresh.
 
+Choosing a different folder closes the documents belonging to the old one, so
+the browser and the editor never disagree about which workspace you are in.
+Unsaved work is not closed on your behalf: each document is asked in the
+standard way, and cancelling any of them abandons the switch rather than
+leaving half a workspace open. Documents from outside the workspace — and any
+untitled draft — are left alone.
+
 ## Markdown, shown but not hidden
 
 Emphasis is drawn as emphasis — **bold** is bold, *italic* is italic — while the
@@ -210,7 +217,7 @@ objects:
 xcodebuild -project Paragraph.xcodeproj -scheme Paragraph -configuration Debug test
 ```
 
-Currently 101 package tests and 76 application tests, with no compiler warnings.
+Currently 101 package tests and 79 application tests, with no compiler warnings.
 
 ## Layout
 
@@ -329,9 +336,9 @@ language-specific Writing Check rules.
 
 Working and usable for real writing. Known gaps:
 
-- **iCloud Drive workspaces are untested.** The code path exists — security-
-  scoped bookmarks, download-status handling — but it has not been exercised
-  against a real iCloud folder.
+- **iCloud Drive workspaces work.** Opening a folder inside iCloud Drive,
+  editing and saving a file there, and having the folder come back after a quit
+  have all been exercised against a real iCloud folder.
 - Native window tabbing means each tab is a window with its own browser;
   visibility is kept in step across a tab group so the group behaves like the
   single window it appears to be.

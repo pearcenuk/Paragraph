@@ -95,6 +95,68 @@ final class WorkspaceTests: XCTestCase {
         XCTAssertNil(Workspace(url: missing, startAccessing: false))
     }
 
+    // MARK: - Switching workspace
+
+    func testAWorkspaceKnowsWhatIsInsideIt() throws {
+        let workspace = try makeWorkspace()
+        XCTAssertTrue(workspace.contains(root.appendingPathComponent("Chapter01.md")))
+        XCTAssertTrue(workspace.contains(root.appendingPathComponent("Notes/Characters.md")))
+        XCTAssertFalse(workspace.contains(URL(fileURLWithPath: "/tmp/Elsewhere.md")))
+
+        // A sibling folder whose name merely starts the same way is outside it.
+        let lookalike = root.deletingLastPathComponent()
+            .appendingPathComponent(root.lastPathComponent + "-other/File.md")
+        XCTAssertFalse(workspace.contains(lookalike))
+    }
+
+    func testSwitchingWorkspaceClosesThatFoldersDocuments() throws {
+        let workspace = try makeWorkspace()
+        let inside = root.appendingPathComponent("Chapter01.md")
+
+        let opened = expectation(description: "opened")
+        DocumentOpener.open(url: inside, placement: .newTab(in: nil))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { opened.fulfill() }
+        wait(for: [opened], timeout: 5)
+        XCTAssertNotNil(document(at: inside), "the file did not open")
+
+        // Nothing is edited, so closing needs no prompt and is synchronous
+        // enough to observe on the next turn of the run loop.
+        let belonging = NSDocumentController.shared.documents.filter {
+            $0.fileURL.map { workspace.contains($0) } ?? false
+        }
+        let closed = expectation(description: "closed")
+        DocumentCloser(documents: belonging) { didClose in
+            XCTAssertTrue(didClose)
+            closed.fulfill()
+        }.start()
+        wait(for: [closed], timeout: 5)
+
+        XCTAssertNil(document(at: inside),
+                     "a document from the old workspace should not survive the switch")
+    }
+
+    func testDocumentsOutsideTheWorkspaceAreLeftAlone() throws {
+        let workspace = try makeWorkspace()
+        let outside = FileManager.default.temporaryDirectory
+            .appendingPathComponent("Outside-\(UUID().uuidString).md")
+        try Data("# Elsewhere\n".utf8).write(to: outside)
+        defer { try? FileManager.default.removeItem(at: outside) }
+
+        XCTAssertFalse(workspace.contains(outside))
+
+        // An untitled document has no file at all, so it belongs to no
+        // workspace and must never be swept up by a switch.
+        let untitled = MarkdownDocument()
+        XCTAssertNil(untitled.fileURL)
+        XCTAssertFalse(untitled.fileURL.map { workspace.contains($0) } ?? false)
+    }
+
+    private func document(at url: URL) -> NSDocument? {
+        NSDocumentController.shared.documents.first {
+            $0.fileURL?.standardizedFileURL == url.standardizedFileURL
+        }
+    }
+
     // MARK: - Quick Open
 
     func testQuickOpenFiltersToTheWorkspace() throws {
