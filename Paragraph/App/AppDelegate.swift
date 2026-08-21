@@ -13,6 +13,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private var didRestoreSession = false
+    private var isRestoring = false
+    private var sessionSaveWork: DispatchWorkItem?
     private var recentlyClosedFiles: [URL] = []
     private var observers: Set<AnyCancellable> = []
 
@@ -36,13 +38,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         WorkspaceController.shared.restoreSavedWorkspace()
 
         if Preferences.shared.restorePreviousSession, let session = SessionStore.load() {
+            // Restoration opens and closes windows as it works; saving halfway
+            // through would overwrite the very session being restored.
+            isRestoring = true
             didRestoreSession = SessionRestorer.restore(session)
+            isRestoring = false
         }
 
         NotificationCenter.default
             .publisher(for: NSWindow.willCloseNotification)
-            .sink { [weak self] note in self?.rememberClosedWindow(note) }
+            .sink { [weak self] note in
+                self?.rememberClosedWindow(note)
+                self?.scheduleSessionSave()
+            }
             .store(in: &observers)
+
+        // The session is written as it changes rather than only at the end, so
+        // it survives a crash or a force quit as well as a normal one.
+        for name: Notification.Name in [
+            NSWindow.didBecomeMainNotification,
+            NSWindow.didResizeNotification,
+            NSWindow.didMoveNotification
+        ] {
+            NotificationCenter.default
+                .publisher(for: name)
+                .sink { [weak self] _ in self?.scheduleSessionSave() }
+                .store(in: &observers)
+        }
     }
 
     /// A blank document only when there is nothing to come back to.
@@ -54,23 +76,41 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         false
     }
 
-    func applicationWillTerminate(_ notification: Notification) {
-        guard !Self.isRunningTests else { return }
-        saveSession()
-    }
-
     func applicationDidResignActive(_ notification: Notification) {
         guard !Self.isRunningTests else { return }
-        // Cheap, and means an unexpected end still leaves a usable session.
-        saveSession()
+        saveSessionNow()
     }
 
-    private func saveSession() {
+    /// Coalesces the bursts of notifications that a window resize or a tab
+    /// opening produces.
+    private func scheduleSessionSave() {
+        guard !Self.isRunningTests, !isRestoring else { return }
+        sessionSaveWork?.cancel()
+        let work = DispatchWorkItem { [weak self] in self?.saveSessionNow() }
+        sessionSaveWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
+    }
+
+    private func saveSessionNow() {
+        guard !Self.isRunningTests, !isRestoring else { return }
         guard Preferences.shared.restorePreviousSession else {
             SessionStore.clear()
             return
         }
-        SessionStore.save(SessionRestorer.captureCurrentSession())
+
+        let session = SessionRestorer.captureCurrentSession()
+
+        // Windows close one at a time as the application quits, and the last
+        // capture would therefore describe an empty screen. Rather than take
+        // over termination — which means taking over the document machinery's
+        // own closing sequence — an empty capture simply never replaces a
+        // populated session. The cost is that closing every window and then
+        // quitting brings those windows back; losing an afternoon's arrangement
+        // of tabs would be the worse trade.
+        if session.windows.isEmpty, SessionStore.load()?.windows.isEmpty == false {
+            return
+        }
+        SessionStore.save(session)
     }
 
     private func rememberClosedWindow(_ notification: Notification) {

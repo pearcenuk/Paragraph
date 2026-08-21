@@ -74,9 +74,12 @@ final class DocumentWindowController: NSWindowController {
         window?.setContentSize(Self.defaultContentSize)
         window?.toolbar = makeToolbar()
 
-        // The browser is the point of having a workspace, so it starts open when
-        // there is one. Session restoration overrides this per window.
-        sidebarItem.isCollapsed = WorkspaceController.shared.workspace == nil
+        // The browser starts open. Deciding from the current workspace would be
+        // wrong as well as fiddly: the first window is built during
+        // `finishLaunching`, before the saved workspace has been resolved. When
+        // there is no workspace the browser shows its "Choose Folder…" empty
+        // state, which is the most useful thing a new writer can be shown.
+        // Session restoration sets this per window afterwards.
 
         WorkspaceController.shared.$workspace
             .receive(on: RunLoop.main)

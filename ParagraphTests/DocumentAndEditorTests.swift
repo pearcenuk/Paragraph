@@ -358,6 +358,30 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertEqual(first.window?.tabbingMode, .automatic)
     }
 
+    func testNewWindowsOpenAtASizeWorthWritingIn() throws {
+        // Assigning `contentViewController` shrinks the window to the split
+        // view's minimum thicknesses unless the size is restored afterwards.
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        let window = try XCTUnwrap(controller.window)
+
+        XCTAssertEqual(window.frame.width, DocumentWindowController.defaultContentSize.width,
+                       accuracy: 2, "window is not the intended width")
+        XCTAssertGreaterThanOrEqual(window.frame.height,
+                                    DocumentWindowController.defaultContentSize.height,
+                                    "window is shorter than the intended content height")
+    }
+
+    func testTheBrowserStartsOpen() throws {
+        // The first window is built before the saved workspace is resolved, so
+        // the browser cannot decide from it; it starts open either way and shows
+        // its empty state when there is no workspace.
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        _ = controller.window
+        XCTAssertFalse(controller.isSidebarCollapsed)
+    }
+
     func testWindowsDoNotUseSystemRestoration() throws {
         // Paragraph restores its own session; two mechanisms would fight.
         let document = try makeDocument("Text.\n")

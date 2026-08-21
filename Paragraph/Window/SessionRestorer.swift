@@ -26,23 +26,31 @@ enum SessionRestorer {
                 groupWindows = [window]
             }
 
-            let tabs = groupWindows.compactMap { tabWindow -> TabSession? in
+            // An unsaved document has no file to record, so it is left out.
+            // The active index must be counted against what actually gets
+            // written, not against every window in the group, or restoring will
+            // select the wrong tab.
+            let recorded: [(window: NSWindow, tab: TabSession)] = groupWindows.compactMap { tabWindow in
                 guard let tabController = tabWindow.windowController as? DocumentWindowController,
                       let url = tabController.markdownDocument.fileURL
                 else { return nil }
 
                 let editor = tabController.editorViewController
-                return TabSession(
-                    bookmark: SessionStore.bookmark(for: url),
-                    path: url.path,
-                    selectionLocation: editor.selectedRange.location,
-                    scrollFraction: editor.scrollFraction
+                return (
+                    tabWindow,
+                    TabSession(
+                        bookmark: SessionStore.bookmark(for: url),
+                        path: url.path,
+                        selectionLocation: editor.selectedRange.location,
+                        scrollFraction: editor.scrollFraction
+                    )
                 )
             }
+            let tabs = recorded.map(\.tab)
             guard !tabs.isEmpty else { continue }
 
             let activeIndex = window.tabGroup?.selectedWindow
-                .flatMap { groupWindows.firstIndex(of: $0) } ?? 0
+                .flatMap { selected in recorded.firstIndex { $0.window === selected } } ?? 0
 
             state.windows.append(
                 WindowSession(
