@@ -172,12 +172,8 @@ final class DocumentWindowController: NSWindowController {
         editorViewController.focusEditor()
     }
 
-    @IBAction func openSelectedFileInPlace(_ sender: Any?) {
-        browserViewController.openSelectedInPlace()
-    }
-
-    @IBAction func openSelectedFileInNewTab(_ sender: Any?) {
-        browserViewController.openSelectedInNewTab()
+    @IBAction func openSelectedFileInTab(_ sender: Any?) {
+        browserViewController.openSelectedInTab()
     }
 
     @IBAction func openSelectedFileInNewWindow(_ sender: Any?) {
@@ -196,9 +192,7 @@ extension DocumentWindowController: NSMenuItemValidation {
             menuItem.state = isSidebarCollapsed ? .off : .on
             return true
 
-        case #selector(openSelectedFileInPlace(_:)),
-             #selector(openSelectedFileInNewTab(_:)),
-             #selector(openSelectedFileInNewWindow(_:)):
+        case #selector(openSelectedFileInTab(_:)), #selector(openSelectedFileInNewWindow(_:)):
             return browserViewController.selectedItem.map { !$0.isDirectory } ?? false
 
         default:
@@ -255,7 +249,6 @@ extension DocumentWindowController: WorkspaceBrowserDelegate {
         // placement made before the window existed still lands in this group.
         let resolved: OpenPlacement
         switch placement {
-        case .replacingTab: resolved = .replacingTab(window)
         case .newTab: resolved = .newTab(in: window)
         case .newWindow: resolved = .newWindow
         }

@@ -462,9 +462,9 @@ final class DocumentAndEditorTests: XCTestCase {
 
     // MARK: - How files open
 
-    /// Opening a file from the browser should put it where the writer is
-    /// already looking. Adding a tab is a deliberate act, not the default.
-    func testOpeningInPlaceReplacesACleanTab() throws {
+    /// Opening a file from the browser adds a tab and leaves what is already
+    /// open exactly where it is.
+    func testOpeningAFileAddsATabAndKeepsWhatIsOpen() throws {
         let first = try makeFile("First.md", "# First\n")
         let second = try makeFile("Second.md", "# Second\n")
 
@@ -475,49 +475,42 @@ final class DocumentAndEditorTests: XCTestCase {
 
         let firstWindow = try XCTUnwrap(windowShowing(first))
 
-        let replaced = expectation(description: "second opened")
-        DocumentOpener.open(url: second, placement: .replacingTab(firstWindow))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { replaced.fulfill() }
-        wait(for: [replaced], timeout: 5)
+        let added = expectation(description: "second opened")
+        DocumentOpener.open(url: second, placement: .newTab(in: firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { added.fulfill() }
+        wait(for: [added], timeout: 5)
 
         XCTAssertNotNil(windowShowing(second), "the file asked for should be open")
-        XCTAssertNil(windowShowing(first),
-                     "a clean tab should give way rather than accumulate")
+        XCTAssertNotNil(windowShowing(first),
+                        "opening a file must not close what was already open")
 
+        windowShowing(first)?.close()
         windowShowing(second)?.close()
     }
 
-    /// The exception that makes the behaviour safe: unsaved work is never
-    /// closed to make room for another file.
-    func testOpeningInPlaceKeepsATabWithUnsavedChanges() throws {
-        let first = try makeFile("Third.md", "# Third\n")
-        let second = try makeFile("Fourth.md", "# Fourth\n")
+    func testOpeningTheSameFileTwiceDoesNotDuplicateIt() throws {
+        let file = try makeFile("Once.md", "# Once\n")
 
         let opened = expectation(description: "opened")
-        DocumentOpener.open(url: first, placement: .newTab(in: nil))
+        DocumentOpener.open(url: file, placement: .newTab(in: nil))
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { opened.fulfill() }
         wait(for: [opened], timeout: 5)
 
-        let firstWindow = try XCTUnwrap(windowShowing(first))
-        let firstDocument = try XCTUnwrap(
-            (firstWindow.windowController as? DocumentWindowController)?.markdownDocument
-        )
-        firstDocument.textStorage.replaceCharacters(in: NSRange(location: 0, length: 0),
-                                                    with: "edited ")
-        XCTAssertTrue(firstDocument.isDocumentEdited)
+        let window = try XCTUnwrap(windowShowing(file))
 
-        let replaced = expectation(description: "second opened")
-        DocumentOpener.open(url: second, placement: .replacingTab(firstWindow))
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { replaced.fulfill() }
-        wait(for: [replaced], timeout: 5)
+        let again = expectation(description: "opened again")
+        DocumentOpener.open(url: file, placement: .newTab(in: window))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { again.fulfill() }
+        wait(for: [again], timeout: 5)
 
-        XCTAssertNotNil(windowShowing(second))
-        XCTAssertNotNil(windowShowing(first),
-                        "unsaved work must not be closed to make room for another file")
+        let showing = NSApp.windows.filter { candidate in
+            guard let controller = candidate.windowController as? DocumentWindowController,
+                  candidate.isVisible else { return false }
+            return controller.markdownDocument.fileURL?.standardizedFileURL == file.standardizedFileURL
+        }
+        XCTAssertEqual(showing.count, 1, "the existing tab should be activated, not duplicated")
 
-        firstDocument.updateChangeCount(.changeCleared)
-        windowShowing(first)?.close()
-        windowShowing(second)?.close()
+        window.close()
     }
 
     private func windowShowing(_ url: URL) -> NSWindow? {

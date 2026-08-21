@@ -101,8 +101,7 @@ enum AppCommand: String, CaseIterable {
     case quickOpen
     case moveFocusToWorkspaceBrowser
     case moveFocusToEditor
-    case openInPlace
-    case openInNewTab
+    case openInTab
     case openInNewWindow
     case showNextTab
     case showPreviousTab
@@ -141,8 +140,7 @@ enum AppCommand: String, CaseIterable {
         case .quickOpen: return L10n.commandQuickOpen
         case .moveFocusToWorkspaceBrowser: return L10n.commandFocusBrowser
         case .moveFocusToEditor: return L10n.commandFocusEditor
-        case .openInPlace: return L10n.commandOpenSelected
-        case .openInNewTab: return L10n.commandOpenInNewTab
+        case .openInTab: return L10n.commandOpenInTab
         case .openInNewWindow: return L10n.commandOpenInNewWindow
         case .showNextTab: return L10n.commandNextTab
         case .showPreviousTab: return L10n.commandPreviousTab
@@ -179,8 +177,7 @@ enum AppCommand: String, CaseIterable {
         case .quickOpen: return #selector(AppDelegate.showQuickOpen(_:))
         case .moveFocusToWorkspaceBrowser: return #selector(DocumentWindowController.moveFocusToWorkspaceBrowser(_:))
         case .moveFocusToEditor: return #selector(DocumentWindowController.moveFocusToEditor(_:))
-        case .openInPlace: return #selector(DocumentWindowController.openSelectedFileInPlace(_:))
-        case .openInNewTab: return #selector(DocumentWindowController.openSelectedFileInNewTab(_:))
+        case .openInTab: return #selector(DocumentWindowController.openSelectedFileInTab(_:))
         case .openInNewWindow: return #selector(DocumentWindowController.openSelectedFileInNewWindow(_:))
         case .showNextTab: return #selector(NSWindow.selectNextTab(_:))
         case .showPreviousTab: return #selector(NSWindow.selectPreviousTab(_:))
@@ -219,8 +216,7 @@ enum AppCommand: String, CaseIterable {
         case .quickOpen: return Shortcut("o", [.command, .shift])
         case .moveFocusToWorkspaceBrowser: return Shortcut("1")
         case .moveFocusToEditor: return Shortcut("2")
-        case .openInPlace: return Shortcut("\r")
-        case .openInNewTab: return Shortcut("\r", [.command, .option])
+        case .openInTab: return Shortcut("\r")
         case .openInNewWindow: return Shortcut("\r", [.command, .shift])
         case .showNextTab: return Shortcut("\t", [.control])
         case .showPreviousTab: return Shortcut("\t", [.control, .shift])
@@ -243,7 +239,7 @@ enum AppCommand: String, CaseIterable {
              .themeGreenScreen, .increaseFontSize, .decreaseFontSize, .actualFontSize:
             return .view
         case .quickOpen, .moveFocusToWorkspaceBrowser, .moveFocusToEditor,
-             .openInPlace, .openInNewTab, .openInNewWindow, .showNextTab, .showPreviousTab,
+             .openInTab, .openInNewWindow, .showNextTab, .showPreviousTab,
              .reopenClosedTab:
             return .navigate
         case .toggleTypewriterMode, .toggleFocusMode, .toggleSpellChecking,

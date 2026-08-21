@@ -94,7 +94,7 @@ Green Screen is a dark room and green text, and nothing else: no scan lines, no 
 
 A workspace is a folder and nothing more. Choose one and its Markdown and text files appear on the left, where you can navigate them entirely from the keyboard: `⌘1` moves focus there, arrow keys walk the tree, `↩` opens, and `Esc` hands focus back to the manuscript.
 
-Double-clicking opens a file **in the tab you are already looking at**, the way an editor does. The tab it replaces is closed only if it holds nothing unsaved. Opening an *additional* tab is deliberate: middle-click, `⌥↩`, or the contextual menu.
+Double-clicking a file opens it as a new tab, leaving whatever is already open where it is. `⇧↩`, or the contextual menu, opens it in a separate window instead. An untitled document you have never typed in is cleared away rather than left beside the file you opened.
 
 Right-click a folder and choose **New File…** to start a chapter where you
 want it — inside that folder, or alongside the file you clicked. A bare name
@@ -157,8 +157,7 @@ Every command is also in the menus; shortcuts are accelerators, not the only way
 | Show/Hide Workspace Browser | `⌥⌘S` |
 | Move Focus to Workspace Browser | `⌘1` |
 | Move Focus to Editor | `⌘2` |
-| Open | `⌘↩` |
-| Open in New Tab | `⌥⌘↩` |
+| Open in Tab | `⌘↩` |
 | Open in New Window | `⇧⌘↩` |
 | Show Next / Previous Tab | `⌃⇥` / `⌃⇧⇥` |
 | Reopen Closed Tab | `⇧⌘T` |

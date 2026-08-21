@@ -125,27 +125,13 @@ extension WorkspaceBrowserViewController: NSOutlineViewDelegate {
 final class WorkspaceOutlineView: NSOutlineView {
     weak var keyDelegate: WorkspaceBrowserViewController?
 
-    /// Middle-click opens in a new tab, the way it does in a browser.
-    override func otherMouseDown(with event: NSEvent) {
-        guard event.buttonNumber == 2 else {
-            super.otherMouseDown(with: event)
-            return
-        }
-        let row = self.row(at: convert(event.locationInWindow, from: nil))
-        guard row >= 0 else { return }
-        selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
-        keyDelegate?.openSelectedInNewTab()
-    }
-
     override func keyDown(with event: NSEvent) {
         switch event.keyCode {
         case 36, 76:                                    // Return, Enter
             if event.modifierFlags.contains(.shift) {
                 keyDelegate?.openSelectedInNewWindow()
-            } else if event.modifierFlags.contains(.option) {
-                keyDelegate?.openSelectedInNewTab()
             } else {
-                keyDelegate?.openSelectedInPlace()
+                keyDelegate?.openSelectedInTab()
             }
         case 53:                                        // Escape
             keyDelegate?.returnFocusToEditor()

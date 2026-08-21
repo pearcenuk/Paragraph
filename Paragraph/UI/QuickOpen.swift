@@ -76,7 +76,6 @@ final class QuickOpenModel: ObservableObject {
 
 /// How Quick Open should place the file it opens.
 enum QuickOpenPlacement {
-    case inPlace
     case newTab
     case newWindow
 }
@@ -117,7 +116,7 @@ struct QuickOpenView: View {
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     model.selectedIndex = index
-                                    onOpen(item, .inPlace)
+                                    onOpen(item, .newTab)
                                 }
                             }
                         }
@@ -288,9 +287,7 @@ final class QuickOpenPanelController: NSObject {
                 if let item = self.model.selectedItem {
                     let modifiers = event.modifierFlags
                     let placement: QuickOpenPlacement =
-                        modifiers.contains(.shift) ? .newWindow
-                        : modifiers.contains(.option) ? .newTab
-                        : .inPlace
+                        modifiers.contains(.shift) ? .newWindow : .newTab
                     self.open(item, placement: placement)
                 }
                 return nil
@@ -311,7 +308,6 @@ final class QuickOpenPanelController: NSObject {
         }
         close()
         switch placement {
-        case .inPlace: DocumentOpener.open(url: item.url, placement: .replacingTab(destination))
         case .newTab: DocumentOpener.open(url: item.url, placement: .newTab(in: destination))
         case .newWindow: DocumentOpener.open(url: item.url, placement: .newWindow)
         }

@@ -88,8 +88,7 @@ enum L10n {
     static let commandQuickOpen = String(localized: "Quick Open…", comment: "Navigate menu")
     static let commandFocusBrowser = String(localized: "Move Focus to Workspace Browser", comment: "Navigate menu")
     static let commandFocusEditor = String(localized: "Move Focus to Editor", comment: "Navigate menu")
-    static let commandOpenSelected = String(localized: "Open", comment: "Opens the selected file in the current tab")
-    static let commandOpenInNewTab = String(localized: "Open in New Tab", comment: "Navigate menu and browser context menu")
+    static let commandOpenInTab = String(localized: "Open in Tab", comment: "Navigate menu and browser context menu")
     static let commandOpenInNewWindow = String(localized: "Open in New Window", comment: "Navigate menu and browser context menu")
     static let commandNextTab = String(localized: "Show Next Tab", comment: "Navigate menu")
     static let commandPreviousTab = String(localized: "Show Previous Tab", comment: "Navigate menu")
@@ -151,7 +150,7 @@ enum L10n {
 
     static let quickOpenPlaceholder = String(localized: "Open Quickly", comment: "Placeholder in the Quick Open field")
     static let quickOpenNoMatches = String(localized: "No matching files", comment: "Quick Open empty result")
-    static let quickOpenHint = String(localized: "Return opens. Option-Return opens a new tab, Shift-Return a new window.", comment: "Quick Open footer hint")
+    static let quickOpenHint = String(localized: "Return opens in a tab. Shift-Return opens in a new window.", comment: "Quick Open footer hint")
 
     // MARK: - Settings
 
