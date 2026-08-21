@@ -280,9 +280,10 @@ Working and usable for real writing. Known gaps:
 
 ## Licence
 
-Paragraph itself has no licence yet — see [LICENCE-NOTICE.md](LICENCE-NOTICE.md).
+Paragraph is released under the [MIT License](LICENSE).
 
-The bundled typeface, **IBM Plex Sans**, is © IBM Corp. and licensed under the
-SIL Open Font License 1.1. The licence text travels with the font, in
+The bundled typeface, **IBM Plex Sans**, is © IBM Corp. and licensed separately
+under the SIL Open Font License 1.1. The licence text travels with the font, in
 `Paragraph/Resources/Fonts/IBMPlexSans-OFL.txt` and inside the application
-bundle. The application icon is a pilcrow set in the same typeface.
+bundle. The application icon is a pilcrow set in the same typeface. See
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
