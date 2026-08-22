@@ -743,6 +743,17 @@ final class DocumentAndEditorTests: XCTestCase {
         let identifiers = toolbar?.items.map(\.itemIdentifier) ?? []
         XCTAssertTrue(identifiers.contains(.toggleSidebar),
                       "the sidebar button did not get vended by the toolbar delegate")
+        XCTAssertFalse(identifiers.contains(.sidebarTrackingSeparator),
+                       "a tracking separator's position depends on the divider's live "
+                       + "geometry, which is what made the button visibly relocate when "
+                       + "the sidebar collapsed")
+
+        // The tab bar underneath already shows the document name, centred. The
+        // same text in the titlebar above it is what pushed the button away
+        // from the true leading edge, since toolbar items lay out after
+        // wherever that text block ends.
+        XCTAssertEqual(controller.window?.titleVisibility, .hidden,
+                       "a visible title text pushes the sidebar button off the leading edge")
     }
 
     func testTogglingTheBrowserWorks() throws {

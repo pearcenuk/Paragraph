@@ -78,6 +78,13 @@ final class DocumentWindowController: NSWindowController {
         // controller's fitting size, which for a split view is barely more than
         // its minimum thicknesses. Restore a size worth writing in.
         window?.setContentSize(Self.defaultContentSize)
+        // The tab bar underneath already shows the document name, centred,
+        // per tab — the same text repeated in the titlebar above it fixes the
+        // sidebar button's position, since toolbar items lay out after
+        // wherever that text block ends. Hiding it here removes a genuine
+        // duplicate, and leaves the whole row free for the button to sit at
+        // its true leading edge.
+        window?.titleVisibility = .hidden
         window?.toolbar = makeToolbar()
 
         // The browser starts open. Deciding from the current workspace would be
@@ -235,43 +242,37 @@ extension DocumentWindowController: NSWindowDelegate {
 
 extension DocumentWindowController: NSToolbarDelegate {
 
-    /// The standard sidebar button, followed by the tracking separator that
-    /// pins it to the browser's side of the split. AppKit supplies the item,
-    /// its symbol and its behaviour; the separator is what puts it on the left,
-    /// over the thing it controls, rather than adrift on the right.
+    /// The standard sidebar button, and nothing else.
+    ///
+    /// A `.sidebarTrackingSeparator` was tried alongside it, glued to the
+    /// split view's divider so the seam between browser and manuscript stayed
+    /// visible in the toolbar. Its position depends on the divider's live
+    /// geometry, though, and the divider itself moves — collapsing to nothing
+    /// — when the sidebar is hidden. The result was the button visibly
+    /// relocating each time the sidebar toggled, from just past the title to
+    /// the toolbar's far trailing edge. A single fixed button leaves nothing
+    /// for that geometry to disturb.
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.toggleSidebar, .sidebarTrackingSeparator]
+        [.toggleSidebar, .flexibleSpace]
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [.toggleSidebar, .sidebarTrackingSeparator]
+        [.toggleSidebar, .flexibleSpace]
     }
 
     /// Standard identifiers still have to be vended explicitly. Without this
-    /// method the toolbar has no way to create anything for either identifier —
-    /// including `.toggleSidebar` — so the button disappeared entirely rather
-    /// than merely losing its custom styling.
+    /// method the toolbar has no way to create anything — including
+    /// `.toggleSidebar` — so the button disappears entirely rather than merely
+    /// losing its custom styling.
     func toolbar(
         _ toolbar: NSToolbar,
         itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
         willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-        switch itemIdentifier {
-        case .toggleSidebar:
-            // A plain item with the standard identifier: AppKit fills in the
-            // symbol, the accessibility label and the action itself.
-            return NSToolbarItem(itemIdentifier: .toggleSidebar)
-
-        case .sidebarTrackingSeparator:
-            return NSTrackingSeparatorToolbarItem(
-                identifier: .sidebarTrackingSeparator,
-                splitView: splitViewController.splitView,
-                dividerIndex: 0
-            )
-
-        default:
-            return nil
-        }
+        guard itemIdentifier == .toggleSidebar else { return nil }
+        // A plain item with the standard identifier: AppKit fills in the
+        // symbol, the accessibility label and the action itself.
+        return NSToolbarItem(itemIdentifier: .toggleSidebar)
     }
 }
 
