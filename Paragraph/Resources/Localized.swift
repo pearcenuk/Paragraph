@@ -160,6 +160,8 @@ enum L10n {
     static let settingsRestoreSessionHelp = String(localized: "Reopens your workspace, windows and tabs, and returns you to roughly where you left off.", comment: "Settings explanation")
     static let settingsSpellChecking = String(localized: "Check spelling while typing", comment: "Settings checkbox")
     static let settingsSpellCheckingHelp = String(localized: "Uses the spelling languages configured in macOS System Settings.", comment: "Settings explanation")
+    static let settingsAutocorrect = String(localized: "Autocorrect spelling", comment: "Settings checkbox")
+    static let settingsAutocorrectHelp = String(localized: "Off marks misspellings without silently rewriting them. On follows the autocorrect setting in macOS System Settings.", comment: "Settings explanation")
 
     // MARK: - Keyboard Shortcuts window
 

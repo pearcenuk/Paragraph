@@ -62,7 +62,7 @@ final class DocumentWindowController: NSWindowController {
         let contentItem = NSSplitViewItem(viewController: editorViewController)
         contentItem.minimumThickness = 320
 
-        splitViewController = NSSplitViewController()
+        splitViewController = ParagraphSplitViewController()
         // The stock divider is invisible when both sides are near-black, as they
         // are in Green Screen. A themed one keeps the boundary readable.
         splitViewController.splitView = ParagraphSplitView()
@@ -105,6 +105,11 @@ final class DocumentWindowController: NSWindowController {
             .store(in: &observers)
 
         highlightActiveDocument()
+
+        // The tab group only exists once the window is on screen.
+        DispatchQueue.main.async { [weak self] in
+            self?.showTabBarIfHidden()
+        }
     }
 
     /// One button. A writing application does not need a row of them, but the
@@ -120,11 +125,6 @@ final class DocumentWindowController: NSWindowController {
     private func applyTheme(_ theme: Theme) {
         window?.appearance = theme.appearance
         splitViewController.splitView.needsDisplay = true
-    }
-
-    override func windowTitle(forDocumentDisplayName displayName: String) -> String {
-        // Tabs and the title bar show the document's name, never its path.
-        displayName
     }
 
     private func highlightActiveDocument() {
@@ -206,53 +206,72 @@ extension DocumentWindowController: NSMenuItemValidation {
 
 extension DocumentWindowController: NSWindowDelegate {
 
-    /// Zooming fills the display the window is actually on.
+    /// Paragraph deliberately does not tell AppKit how big a zoomed window
+    /// should be.
     ///
-    /// Left to itself, AppKit derives the zoomed size from a frame it remembered
-    /// earlier. Move a window to a second display and double-click its title
-    /// bar, and it can size itself for the display it used to be on instead —
-    /// which looks like the window refusing to fill the screen.
+    /// Answering that question took over the whole toggle: AppKit decides
+    /// whether a double-click zooms or restores by comparing the window
+    /// against the size it would zoom to, and it keeps the pre-zoom frame
+    /// itself. Supplying a fixed answer meant every double-click zoomed and
+    /// none of them restored. There is nothing to implement here — the
+    /// absence of an override is the fix, and a test asserts it stays absent.
+
+    /// The tab bar stays visible even with a single tab.
     ///
-    /// Returning the current screen's visible frame makes the answer depend on
-    /// where the window is now. Double-clicking again still restores the
-    /// previous size: AppKit remembers that separately.
-    func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
-        (window.screen ?? NSScreen.main)?.visibleFrame ?? newFrame
+    /// macOS hides it until a second tab exists, which means the row of chapters
+    /// appears and disappears as you open and close them. Keeping it there makes
+    /// the window a fixed shape to work in.
+    func windowDidBecomeMain(_ notification: Notification) {
+        showTabBarIfHidden()
+    }
+
+    func showTabBarIfHidden() {
+        guard let window, let group = window.tabGroup, !group.isTabBarVisible else { return }
+        window.toggleTabBar(nil)
     }
 }
 
 // MARK: - Toolbar
 
 extension DocumentWindowController: NSToolbarDelegate {
-    private static let sidebarItemIdentifier = NSToolbarItem.Identifier("ParagraphToggleSidebar")
 
+    /// The standard sidebar button, followed by the tracking separator that
+    /// pins it to the browser's side of the split. AppKit supplies the item,
+    /// its symbol and its behaviour; the separator is what puts it on the left,
+    /// over the thing it controls, rather than adrift on the right.
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [Self.sidebarItemIdentifier, .flexibleSpace]
+        [.toggleSidebar, .sidebarTrackingSeparator]
     }
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [Self.sidebarItemIdentifier, .flexibleSpace]
+        [.toggleSidebar, .sidebarTrackingSeparator]
     }
 
+    /// Standard identifiers still have to be vended explicitly. Without this
+    /// method the toolbar has no way to create anything for either identifier —
+    /// including `.toggleSidebar` — so the button disappeared entirely rather
+    /// than merely losing its custom styling.
     func toolbar(
         _ toolbar: NSToolbar,
         itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier,
         willBeInsertedIntoToolbar flag: Bool
     ) -> NSToolbarItem? {
-        guard itemIdentifier == Self.sidebarItemIdentifier else { return nil }
+        switch itemIdentifier {
+        case .toggleSidebar:
+            // A plain item with the standard identifier: AppKit fills in the
+            // symbol, the accessibility label and the action itself.
+            return NSToolbarItem(itemIdentifier: .toggleSidebar)
 
-        let item = NSToolbarItem(itemIdentifier: itemIdentifier)
-        item.label = L10n.commandToggleWorkspaceBrowser
-        item.paletteLabel = L10n.commandToggleWorkspaceBrowser
-        item.toolTip = L10n.commandToggleWorkspaceBrowser
-        item.image = NSImage(
-            systemSymbolName: "sidebar.left",
-            accessibilityDescription: L10n.commandToggleWorkspaceBrowser
-        )
-        item.target = self
-        item.action = #selector(toggleWorkspaceBrowser(_:))
-        item.isBordered = true
-        return item
+        case .sidebarTrackingSeparator:
+            return NSTrackingSeparatorToolbarItem(
+                identifier: .sidebarTrackingSeparator,
+                splitView: splitViewController.splitView,
+                dividerIndex: 0
+            )
+
+        default:
+            return nil
+        }
     }
 }
 

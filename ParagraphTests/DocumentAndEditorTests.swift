@@ -441,8 +441,12 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertTrue(textView.isEditable)
         XCTAssertTrue(textView.isSelectable)
         XCTAssertFalse(textView.isGrammarCheckingEnabled, "no grammar squiggles")
-        XCTAssertFalse(textView.isAutomaticSpellingCorrectionEnabled,
-                       "a novelist's invented words must not be corrected for them")
+        // Autocorrect is a system text setting. Whatever the writer chose for
+        // every other application on their Mac is what Paragraph uses.
+        let systemAutocorrect = UserDefaults.standard
+            .object(forKey: "NSAutomaticSpellingCorrectionEnabled") as? Bool ?? false
+        XCTAssertEqual(textView.isAutomaticSpellingCorrectionEnabled, systemAutocorrect,
+                       "autocorrect should follow the system setting, not be forced")
         XCTAssertFalse(textView.isAutomaticLinkDetectionEnabled,
                        "a source editor should not turn URLs into links")
         XCTAssertNotNil(textView.layoutManager, "Focus Mode needs TextKit 1 temporary attributes")
@@ -458,6 +462,33 @@ final class DocumentAndEditorTests: XCTestCase {
 
         Preferences.shared.spellCheckingEnabled = true
         XCTAssertTrue(controller.editorViewController.textView.isContinuousSpellCheckingEnabled)
+    }
+
+    /// Autocorrect follows the system by default, but a writer can turn it off
+    /// inside Paragraph specifically — misspellings are still marked, nothing
+    /// is silently rewritten. The override must win regardless of what the
+    /// system-wide setting happens to be.
+    func testAutocorrectCanBeSwitchedOffIndependentlyOfTheSystem() throws {
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        _ = controller.editorViewController.view
+
+        let original = Preferences.shared.autocorrectSpelling
+        defer { Preferences.shared.autocorrectSpelling = original }
+
+        // The setting reaches the text view through a main-run-loop Combine
+        // subscription, so give it a turn of the loop before asserting.
+        Preferences.shared.autocorrectSpelling = false
+        RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        XCTAssertFalse(controller.editorViewController.textView.isAutomaticSpellingCorrectionEnabled,
+                       "the override should force autocorrect off")
+
+        Preferences.shared.autocorrectSpelling = true
+        RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+        let systemAutocorrect = UserDefaults.standard
+            .object(forKey: "NSAutomaticSpellingCorrectionEnabled") as? Bool ?? false
+        XCTAssertEqual(controller.editorViewController.textView.isAutomaticSpellingCorrectionEnabled,
+                       systemAutocorrect, "with the override on, the system setting decides")
     }
 
     // MARK: - How files open
@@ -486,6 +517,84 @@ final class DocumentAndEditorTests: XCTestCase {
 
         windowShowing(first)?.close()
         windowShowing(second)?.close()
+    }
+
+    /// `NSWindow.addTabbedWindow(_:ordered:)`'s naming reads backwards from
+    /// what it does: `.above` inserts immediately to the *right* of the window
+    /// it is called on, `.below` to the left — confirmed empirically, since the
+    /// documentation reads either way. Opening files one after another, without
+    /// switching tabs in between, must build up left to right in the order they
+    /// were opened.
+    func testNewTabsOpenToTheRightOfTheCurrentOne() throws {
+        let first = try makeFile("Left.md", "# Left\n")
+        let second = try makeFile("Middle.md", "# Middle\n")
+        let third = try makeFile("Right.md", "# Right\n")
+
+        let firstOpened = expectation(description: "first opened")
+        DocumentOpener.open(url: first, placement: .newTab(in: nil))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { firstOpened.fulfill() }
+        wait(for: [firstOpened], timeout: 5)
+        let firstWindow = try XCTUnwrap(windowShowing(first))
+
+        let secondOpened = expectation(description: "second opened")
+        DocumentOpener.open(url: second, placement: .newTab(in: firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { secondOpened.fulfill() }
+        wait(for: [secondOpened], timeout: 5)
+
+        let thirdOpened = expectation(description: "third opened")
+        DocumentOpener.open(url: third, placement: .newTab(in: firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { thirdOpened.fulfill() }
+        wait(for: [thirdOpened], timeout: 5)
+
+        let order = firstWindow.tabGroup?.windows.compactMap {
+            ($0.windowController as? DocumentWindowController)?.markdownDocument.fileURL?.lastPathComponent
+        } ?? []
+        XCTAssertEqual(order, ["Left.md", "Middle.md", "Right.md"],
+                       "files opened in sequence should build up left to right")
+
+        windowShowing(first)?.close()
+        windowShowing(second)?.close()
+        windowShowing(third)?.close()
+    }
+
+    /// The actual failure mode: opening a file while an *earlier* tab happens
+    /// to be the active one must not insert the new tab next to that one — it
+    /// still belongs at the end, after every tab already open.
+    func testANewTabTakesTheLastPositionEvenWhenAnEarlierTabIsActive() throws {
+        let first = try makeFile("One.md", "# One\n")
+        let second = try makeFile("Two.md", "# Two\n")
+        let third = try makeFile("Three.md", "# Three\n")
+
+        let firstOpened = expectation(description: "first opened")
+        DocumentOpener.open(url: first, placement: .newTab(in: nil))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { firstOpened.fulfill() }
+        wait(for: [firstOpened], timeout: 5)
+        let firstWindow = try XCTUnwrap(windowShowing(first))
+
+        let secondOpened = expectation(description: "second opened")
+        DocumentOpener.open(url: second, placement: .newTab(in: firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { secondOpened.fulfill() }
+        wait(for: [secondOpened], timeout: 5)
+
+        // Switch back to the first tab before opening a third file — this is
+        // the scenario that broke: the new tab was inserted next to whichever
+        // tab was active, landing it left of tabs opened earlier.
+        firstWindow.makeKeyAndOrderFront(nil)
+
+        let thirdOpened = expectation(description: "third opened")
+        DocumentOpener.open(url: third, placement: .newTab(in: firstWindow))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) { thirdOpened.fulfill() }
+        wait(for: [thirdOpened], timeout: 5)
+
+        let order = firstWindow.tabGroup?.windows.compactMap {
+            ($0.windowController as? DocumentWindowController)?.markdownDocument.fileURL?.lastPathComponent
+        } ?? []
+        XCTAssertEqual(order, ["One.md", "Two.md", "Three.md"],
+                       "a newly opened file must take the last position, not sit next to the active tab")
+
+        windowShowing(first)?.close()
+        windowShowing(second)?.close()
+        windowShowing(third)?.close()
     }
 
     func testOpeningTheSameFileTwiceDoesNotDuplicateIt() throws {
@@ -581,37 +690,23 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertFalse(controller.isSidebarCollapsed)
     }
 
-    /// Left to itself, AppKit zooms a window using a frame it remembered
-    /// earlier — which on a second display can be sized for the display the
-    /// window used to be on, so it appears to refuse to fill the screen.
-    func testZoomingFillsTheDisplayTheWindowIsOn() throws {
-        let document = try makeDocument("Text.\n")
-        let controller = DocumentWindowController(markdownDocument: document)
-        let window = try XCTUnwrap(controller.window)
-        _ = window
-
-        for screen in NSScreen.screens {
-            // Put the window on this screen, then ask what zoom would do.
-            let origin = NSPoint(x: screen.visibleFrame.midX - 300,
-                                 y: screen.visibleFrame.midY - 200)
-            window.setFrame(NSRect(origin: origin, size: NSSize(width: 600, height: 400)),
-                            display: false)
-
-            let standard = controller.windowWillUseStandardFrame(window, defaultFrame: .zero)
-            let expected = (window.screen ?? NSScreen.main)?.visibleFrame
-
-            XCTAssertEqual(standard, expected,
-                           "zoom should fill the display the window is on")
-            XCTAssertGreaterThan(standard.width, 0)
-        }
-    }
-
+    /// Zoom is AppKit's. Paragraph only has to be the window's delegate, and
+    /// must not answer the question of how big a zoomed window should be —
+    /// answering it broke the restore half of the toggle.
     func testTheWindowControllerIsItsWindowsDelegate() throws {
-        // The zoom behaviour above only takes effect if the delegate is wired up.
         let document = try makeDocument("Text.\n")
         let controller = DocumentWindowController(markdownDocument: document)
         let window = try XCTUnwrap(controller.window)
         XCTAssertTrue(window.delegate === controller)
+    }
+
+    func testParagraphDoesNotOverrideTheZoomedSize() throws {
+        let document = try makeDocument("Text.\n")
+        let controller = DocumentWindowController(markdownDocument: document)
+        XCTAssertFalse(
+            controller.responds(to: NSSelectorFromString("windowWillUseStandardFrame:defaultFrame:")),
+            "deciding the zoomed size is AppKit's job; answering it stops zoom restoring"
+        )
     }
 
     func testWindowsDoNotUseSystemRestoration() throws {
@@ -641,10 +736,13 @@ final class DocumentAndEditorTests: XCTestCase {
         XCTAssertTrue(split?.splitViewItems.first?.canCollapse ?? false)
 
         // The browser must be hideable by clicking as well as by menu command.
+        // Standard toolbar identifiers still have to be vended by the delegate,
+        // or nothing appears at all — the toolbar being non-nil is not enough.
         let toolbar = controller.window?.toolbar
         XCTAssertNotNil(toolbar, "there should be a control to click")
-        let identifiers = toolbar?.items.map(\.itemIdentifier.rawValue) ?? []
-        XCTAssertTrue(identifiers.contains { $0.contains("ToggleSidebar") })
+        let identifiers = toolbar?.items.map(\.itemIdentifier) ?? []
+        XCTAssertTrue(identifiers.contains(.toggleSidebar),
+                      "the sidebar button did not get vended by the toolbar delegate")
     }
 
     func testTogglingTheBrowserWorks() throws {

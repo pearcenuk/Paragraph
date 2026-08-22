@@ -14,6 +14,7 @@ final class Preferences: ObservableObject {
         static let theme = "theme"
         static let restoreSession = "restorePreviousSession"
         static let spellChecking = "spellCheckingEnabled"
+        static let autocorrectSpelling = "autocorrectSpelling"
         static let typewriterMode = "typewriterMode"
         static let focusMode = "focusMode"
         static let wordCountVisible = "wordCountVisible"
@@ -30,6 +31,7 @@ final class Preferences: ObservableObject {
             Key.theme: ThemeIdentifier.light.rawValue,
             Key.restoreSession: true,
             Key.spellChecking: true,
+            Key.autocorrectSpelling: true,
             Key.typewriterMode: false,
             Key.focusMode: false,
             Key.wordCountVisible: true,
@@ -38,6 +40,7 @@ final class Preferences: ObservableObject {
         theme = ThemeIdentifier(rawValue: defaults.string(forKey: Key.theme) ?? "") ?? .light
         restorePreviousSession = defaults.bool(forKey: Key.restoreSession)
         spellCheckingEnabled = defaults.bool(forKey: Key.spellChecking)
+        autocorrectSpelling = defaults.bool(forKey: Key.autocorrectSpelling)
         typewriterMode = defaults.bool(forKey: Key.typewriterMode)
         focusMode = defaults.bool(forKey: Key.focusMode)
         wordCountVisible = defaults.bool(forKey: Key.wordCountVisible)
@@ -56,6 +59,15 @@ final class Preferences: ObservableObject {
 
     @Published var spellCheckingEnabled: Bool {
         didSet { defaults.set(spellCheckingEnabled, forKey: Key.spellChecking) }
+    }
+
+    /// On by default, meaning Paragraph follows whatever the writer already
+    /// chose in macOS System Settings for every other application. Turning
+    /// this off overrides that choice inside Paragraph specifically: spelling
+    /// mistakes are still marked, but nothing is silently rewritten — a
+    /// novelist's invented names should never be corrected out from under them.
+    @Published var autocorrectSpelling: Bool {
+        didSet { defaults.set(autocorrectSpelling, forKey: Key.autocorrectSpelling) }
     }
 
     // MARK: - Restored view state

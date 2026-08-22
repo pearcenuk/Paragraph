@@ -141,6 +141,11 @@ final class EditorViewController: NSViewController {
             }
             .store(in: &observers)
 
+        preferences.$autocorrectSpelling
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in self?.textView.applyAutocorrectSetting() }
+            .store(in: &observers)
+
         preferences.$wordCountVisible
             .receive(on: RunLoop.main)
             .sink { [weak self] visible in self?.wordCountHost.isHidden = !visible }
@@ -180,6 +185,7 @@ final class EditorViewController: NSViewController {
         textView.typewriterModeEnabled = Preferences.shared.typewriterMode
         textView.focusModeEnabled = Preferences.shared.focusMode
         textView.isContinuousSpellCheckingEnabled = Preferences.shared.spellCheckingEnabled
+        textView.applyAutocorrectSetting()
         wordCountHost.isHidden = !Preferences.shared.wordCountVisible
         updateWordCount(document.wordCount)
     }

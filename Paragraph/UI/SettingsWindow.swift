@@ -36,6 +36,14 @@ struct SettingsView: View {
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
+
+            VStack(alignment: .leading, spacing: 3) {
+                Toggle(L10n.settingsAutocorrect, isOn: $preferences.autocorrectSpelling)
+                Text(L10n.settingsAutocorrectHelp)
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
         .padding(20)
         .frame(width: 420)
@@ -48,7 +56,7 @@ final class SettingsWindowController: NSWindowController {
 
     private init() {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 420, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: 420, height: 340),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false

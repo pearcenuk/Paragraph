@@ -36,6 +36,13 @@ final class ParagraphTextView: NSTextView {
         didSet { applyTheme() }
     }
 
+    /// `true` for the whole span of a mouse-driven selection drag.
+    ///
+    /// `NSView.mouseDown(with:)` runs its own internal tracking loop and does
+    /// not return until the mouse button is released, so bracketing the call to
+    /// `super` here covers exactly the drag and nothing else.
+    private(set) var isTrackingMouseSelection = false
+
     /// Builds a text view sharing `storage`, on its own TextKit 1 layout stack.
     static func make(sharing storage: NSTextStorage) -> ParagraphTextView {
         let layoutManager = NSLayoutManager()
@@ -81,24 +88,56 @@ final class ParagraphTextView: NSTextView {
 
         // Spelling is the only continuous analysis Paragraph shows in the text.
         isContinuousSpellCheckingEnabled = Preferences.shared.spellCheckingEnabled
+        // The one piece of continuous analysis Paragraph refuses: grammar
+        // squiggles in a manuscript are noise, not help.
         isGrammarCheckingEnabled = false
-        isAutomaticSpellingCorrectionEnabled = false
 
-        // Substitutions follow the writer's macOS text settings, and can be
-        // changed per application from Edit ▸ Substitutions.
-        let defaults = UserDefaults.standard
+        // Quotes, dashes and text replacement follow the writer's macOS
+        // settings, and can be changed per application from Edit ▸ Substitutions.
+        // Forcing any of these would override a choice the writer already made
+        // for every application on their Mac.
         isAutomaticQuoteSubstitutionEnabled =
-            defaults.object(forKey: "NSAutomaticQuoteSubstitutionEnabled") as? Bool ?? true
+            Self.systemSetting("NSAutomaticQuoteSubstitutionEnabled", default: true)
         isAutomaticDashSubstitutionEnabled =
-            defaults.object(forKey: "NSAutomaticDashSubstitutionEnabled") as? Bool ?? true
+            Self.systemSetting("NSAutomaticDashSubstitutionEnabled", default: true)
         isAutomaticTextReplacementEnabled =
-            defaults.object(forKey: "NSAutomaticTextReplacementEnabled") as? Bool ?? true
+            Self.systemSetting("NSAutomaticTextReplacementEnabled", default: true)
+
+        // Autocorrect is the exception: Paragraph gives the writer its own
+        // override (Settings ▸ Autocorrect Spelling), because a manuscript full
+        // of invented names is exactly where silent, system-wide autocorrect
+        // hurts most. With the override left on, it still follows the system.
+        applyAutocorrectSetting()
         // A Markdown source editor should not turn URLs into links.
         isAutomaticLinkDetectionEnabled = false
         isAutomaticDataDetectionEnabled = false
 
+        // Inline predictive text is a system writing-assistance feature —
+        // ghosted suggestion text ahead of the cursor — and it is exactly the
+        // kind of AI suggestion Paragraph does not do. It also has no public
+        // way to restyle its colour, which is why it read as a flat system
+        // grey sitting oddly against Green Screen rather than the theme.
+        if #available(macOS 14.0, *) {
+            inlinePredictionType = .no
+        }
+
         setAccessibilityLabel(L10n.applicationName)
         applyTheme()
+    }
+
+    private static func systemSetting(_ key: String, default fallback: Bool) -> Bool {
+        UserDefaults.standard.object(forKey: key) as? Bool ?? fallback
+    }
+
+    /// Re-reads both Paragraph's own Settings toggle and the system default.
+    /// Called at setup and whenever the writer changes the toggle.
+    func applyAutocorrectSetting() {
+        guard Preferences.shared.autocorrectSpelling else {
+            isAutomaticSpellingCorrectionEnabled = false
+            return
+        }
+        isAutomaticSpellingCorrectionEnabled =
+            Self.systemSetting("NSAutomaticSpellingCorrectionEnabled", default: false)
     }
 
     // MARK: - Theme
@@ -154,6 +193,7 @@ final class ParagraphTextView: NSTextView {
     /// separate code path for it.
     func scrollCaretToTypewriterPosition() {
         guard typewriterModeEnabled,
+              !isTrackingMouseSelection,
               let layoutManager,
               let textContainer,
               let scrollView = enclosingScrollView
@@ -274,12 +314,16 @@ final class ParagraphTextView: NSTextView {
         }
     }
 
-    /// Escape returns the writer to a clean editing state rather than doing
-    /// nothing; the browser uses the same key to hand focus back here.
-    override func cancelOperation(_ sender: Any?) {
-        if selectedRange().length > 0 {
-            setSelectedRange(NSRange(location: selectedRange().location, length: 0))
-        }
+    /// Typewriter Mode re-centring on every selection change is right for a
+    /// click or an arrow key, but fighting a live drag with it moves the text
+    /// out from under the mouse and breaks the drag entirely. Tracking the
+    /// drag here lets `scrollCaretToTypewriterPosition` skip re-centring while
+    /// one is in progress, then catch up once the mouse is released.
+    override func mouseDown(with event: NSEvent) {
+        isTrackingMouseSelection = true
+        super.mouseDown(with: event)
+        isTrackingMouseSelection = false
+        if typewriterModeEnabled { scrollCaretToTypewriterPosition() }
     }
 }
 

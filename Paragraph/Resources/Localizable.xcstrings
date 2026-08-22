@@ -103,6 +103,17 @@
         }
       }
     },
+    "Autocorrect spelling": {
+      "comment": "Settings checkbox",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autocorrect spelling"
+          }
+        }
+      }
+    },
     "Bigger": {
       "comment": "View menu; increases the text size",
       "localizations": {
@@ -191,6 +202,17 @@
         }
       }
     },
+    "Choose a different name.": {
+      "comment": "Alert detail",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a different name."
+          }
+        }
+      }
+    },
     "Choose a folder to browse in Paragraph.": {
       "comment": "Message in the folder chooser",
       "localizations": {
@@ -264,6 +286,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copy"
+          }
+        }
+      }
+    },
+    "Create": {
+      "comment": "Confirms creating a new file",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create"
+          }
+        }
+      }
+    },
+    "Create a new file in “%@”.": {
+      "comment": "Explains where a new file will be created",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Create a new file in “%@”."
           }
         }
       }
@@ -642,6 +686,28 @@
         }
       }
     },
+    "New File": {
+      "comment": "Title of the sheet that names a new file",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New File"
+          }
+        }
+      }
+    },
+    "New File…": {
+      "comment": "Workspace browser context menu",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New File…"
+          }
+        }
+      }
+    },
     "No matching files": {
       "comment": "Quick Open empty result",
       "localizations": {
@@ -693,6 +759,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "OK"
+          }
+        }
+      }
+    },
+    "Off marks misspellings without silently rewriting them. On follows the autocorrect setting in macOS System Settings.": {
+      "comment": "Settings explanation",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off marks misspellings without silently rewriting them. On follows the autocorrect setting in macOS System Settings."
           }
         }
       }
@@ -1397,6 +1474,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zoom"
+          }
+        }
+      }
+    },
+    "“%@” already exists in this folder.": {
+      "comment": "Alert when a new file would overwrite one",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” already exists in this folder."
           }
         }
       }

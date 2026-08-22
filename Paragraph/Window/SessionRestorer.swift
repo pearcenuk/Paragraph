@@ -87,8 +87,15 @@ enum SessionRestorer {
                 }
                 guard let window = controller.window else { continue }
 
-                if let first = windowsInGroup.first, first !== window {
-                    first.addTabbedWindow(window, ordered: .above)
+                if let rightmost = windowsInGroup.last, rightmost !== window {
+                    // See DocumentOpener: `.above` inserts immediately to the
+                    // right of the window it is called on, verified
+                    // empirically, despite the name. Calling it on the group's
+                    // *first* window every time — rather than the one most
+                    // recently added — would insert each new tab right after
+                    // the first one, reversing the saved order from the third
+                    // tab onward.
+                    rightmost.addTabbedWindow(window, ordered: .above)
                 }
                 windowsInGroup.append(window)
                 restoredAnything = true

@@ -62,7 +62,17 @@ enum DocumentOpener {
             guard let window = controller.window else { return }
 
             if let target, target.tabbingIdentifier == window.tabbingIdentifier, target !== window {
-                target.addTabbedWindow(window, ordered: .above)
+                // Verified empirically: `.above` inserts a tab immediately to
+                // the right of the window it is called on; `.below` inserts to
+                // the left. The naming reads backwards from what it does.
+                //
+                // Calling it on `target` — whichever tab happens to be active —
+                // would insert the new one next to *that* tab, which can land
+                // it left of tabs opened earlier. A newly opened file should
+                // always take the last position, so the call goes on the
+                // group's current rightmost window instead.
+                let rightmost = target.tabGroup?.windows.last ?? target
+                rightmost.addTabbedWindow(window, ordered: .above)
             }
             window.makeKeyAndOrderFront(nil)
 
